@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CreateTariff implements Command {
+public class CreateTariffCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws Exception {
         try {

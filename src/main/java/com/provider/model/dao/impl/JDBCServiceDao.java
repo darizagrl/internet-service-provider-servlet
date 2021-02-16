@@ -1,6 +1,5 @@
 package com.provider.model.dao.impl;
 
-import com.provider.constants.SqlQueries;
 import com.provider.model.dao.ServiceDao;
 import com.provider.model.entity.Service;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCServiceDao implements ServiceDao {
+    public static final String CREATE_SERVICE = "INSERT INTO service VALUES (?)";
+    public static final String FIND_SERVICE_BY_ID = "SELECT * FROM service WHERE service.id = ?";
+    public static final String GET_ALL_SERVICE = "SELECT * FROM service ORDER BY id;";
+    public static final String UPDATE_SERV_NAME = "UPDATE service SET name=? WHERE service.id=?";
+    public static final String DELETE_SERVICE= "DELETE FROM service WHERE service.id = ?";
     private final Logger logger = LogManager.getLogger(JDBCServiceDao.class);
     private final Connection connection;
 
@@ -20,7 +24,7 @@ public class JDBCServiceDao implements ServiceDao {
 
     @Override
     public void create(Service entity) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SqlQueries.CREATE_SERVICE, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SERVICE, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, entity.getName());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
@@ -39,7 +43,7 @@ public class JDBCServiceDao implements ServiceDao {
     @Override
     public Service findById(int id) {
         Service service = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SqlQueries.FIND_SERVICE_BY_ID)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_SERVICE_BY_ID)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -60,7 +64,7 @@ public class JDBCServiceDao implements ServiceDao {
         Statement statement;
         try {
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(SqlQueries.GET_ALL_SERVICE);
+            ResultSet resultSet = statement.executeQuery(GET_ALL_SERVICE);
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String name = resultSet.getString(2);
@@ -76,7 +80,7 @@ public class JDBCServiceDao implements ServiceDao {
 
     @Override
     public void update(Service entity) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SqlQueries.UPDATE_SERVICE_NAME)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SERV_NAME)) {
             preparedStatement.setString(1, (entity.getName()));
             preparedStatement.setInt(2, entity.getId());
             preparedStatement.executeUpdate();
@@ -87,7 +91,7 @@ public class JDBCServiceDao implements ServiceDao {
 
     @Override
     public void delete(int id) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(SqlQueries.DELETE_SERVICE)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SERVICE)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

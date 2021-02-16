@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class JDBCDaoFactory extends DaoFactory {
     private Connection getConnection() throws SQLException, ClassNotFoundException {
         try {
-            Class.forName("org.postgresql.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/provider-servlet",
                     "root",

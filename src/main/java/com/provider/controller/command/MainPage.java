@@ -17,6 +17,7 @@ public class MainPage implements Command {
             DaoFactory factory = DaoFactory.getInstance();
             ServiceDao daoService = factory.createServiceDao();
             TariffDao daoTariff = factory.createTariffDao();
+
             List<Service> serviceList;
             serviceList = daoService.findAll();
             int serviceId;
@@ -32,7 +33,7 @@ public class MainPage implements Command {
                 sortBy=request.getParameter("sort");
             }
             List<Tariff> tariffList;
-            switch(sortBy) {
+            switch (sortBy) {
                 case "ByName(a-z)":
                     tariffList = daoTariff.findByServiceSortedASC(serviceId);
                     break;
@@ -43,7 +44,7 @@ public class MainPage implements Command {
                     tariffList = daoTariff.findByServiceSortedByPrice(serviceId);
                     break;
                 default:
-                    tariffList = daoTariff.findAllByServiceId(serviceId);
+                    tariffList = daoTariff.findAll();
                     break;
             }
             Service service = daoService.findById(serviceId);
@@ -51,7 +52,7 @@ public class MainPage implements Command {
             request.setAttribute("serviceAttr", service);
             request.setAttribute("tariffList", tariffList);
             request.setAttribute("serviceList", serviceList);
-            return "/index.jsp";
+            return "/main.jsp";
         } catch (SQLException e) {
             throw new SQLException();
         } catch (java.lang.Exception e) {

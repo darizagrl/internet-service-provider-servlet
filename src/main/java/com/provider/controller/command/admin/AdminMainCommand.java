@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-public class AdminMain implements Command {
+public class AdminMainCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws Exception{
         try {
@@ -52,7 +52,7 @@ public class AdminMain implements Command {
             request.setAttribute("serviceAttr", service);
             request.setAttribute("tariffList", tariffList);
             request.setAttribute("serviceList", serviceList);
-            return "/main.jsp";
+            return "/admin/admin_index.jsp";
         } catch (SQLException e) {
             throw new SQLException();
         } catch (ClassNotFoundException e) {

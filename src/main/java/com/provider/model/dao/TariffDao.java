@@ -2,7 +2,6 @@ package com.provider.model.dao;
 
 import com.provider.model.entity.Tariff;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface TariffDao extends GenericDao<Tariff> {

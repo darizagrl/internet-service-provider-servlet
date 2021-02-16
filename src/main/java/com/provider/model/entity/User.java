@@ -9,62 +9,27 @@ public class User {
     private String lastname;
     private String email;
     private String password;
-    private Role role;
+    private String role;
     private List<Tariff> tariffs;
     private Double balance;
     private boolean isBlocked;
 
-    public enum Role {
-        USER, ADMIN;
-    }
-
-    private User(Builder builder) {
-        this.id = builder.id;
-        this.email = builder.email;
-        this.password = builder.password;
-        this.role = builder.role;
-    }
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        Integer id;
-        String email;
-        String password;
-        Role role;
-
-        public Builder id(Integer id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder role(Role role) {
-            this.role = role;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
-    }
-
-
-    public User(String firstname, String lastname, String email, String password) {
+    public User(String firstname, String lastname, String email, String password, String role, Double balance, boolean isBlocked) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.role = role;
+        this.balance = 0.0;
+        this.isBlocked = false;
+    }
+
+    public User(String firstname, String lastname, String email, String password, String role) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -107,11 +72,11 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 

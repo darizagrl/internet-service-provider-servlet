@@ -19,6 +19,7 @@ public class Registration implements Command {
             String confirmEmail = request.getParameter("confirmEmail");
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
+            String role = "user";
             System.out.println("user email:" + email);
             System.out.println("user password:" + password);
             if (email == null || email.equals("") || password == null || password.equals("") ||
@@ -48,7 +49,7 @@ public class Registration implements Command {
                     return "/registration.jsp";
                 }
             }
-            User user = new User(firstname, lastname, email, password);
+            User user = new User(firstname, lastname, email, password, role);
             dao.create(user);
             return "redirect:/";
         } catch (SQLException e) {
