@@ -4,12 +4,15 @@ import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;
 import com.provider.model.dao.UserDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCDaoFactory extends DaoFactory {
+    private static final Logger logger = LogManager.getLogger(JDBCDaoFactory.class);
     private Connection getConnection() throws SQLException, ClassNotFoundException {
         try {
             Class.forName("org.postgresql.Driver");
@@ -18,8 +21,10 @@ public class JDBCDaoFactory extends DaoFactory {
                     "root",
                     "root");
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException(e);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }
@@ -29,8 +34,10 @@ public class JDBCDaoFactory extends DaoFactory {
         try {
             return new JDBCUserDao(getConnection());
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException(e);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }
@@ -40,8 +47,10 @@ public class JDBCDaoFactory extends DaoFactory {
         try {
             return new JDBCServiceDao(getConnection());
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException(e);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }
@@ -51,8 +60,10 @@ public class JDBCDaoFactory extends DaoFactory {
         try {
             return new JDBCTariffDao(getConnection());
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException(e);
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }

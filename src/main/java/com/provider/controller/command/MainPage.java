@@ -32,7 +32,7 @@ public class MainPage implements Command {
             }else {
                 sortBy=request.getParameter("sort");
             }
-            List<Tariff> tariffList;
+            List<Tariff> tariffList = daoTariff.findAllByServiceId(1);
             switch (sortBy) {
                 case "ByName(a-z)":
                     tariffList = daoTariff.findByServiceSortedASC(serviceId);
@@ -44,7 +44,7 @@ public class MainPage implements Command {
                     tariffList = daoTariff.findByServiceSortedByPrice(serviceId);
                     break;
                 default:
-                    tariffList = daoTariff.findAll();
+                    tariffList = daoTariff.findAllByServiceId(serviceId);
                     break;
             }
             Service service = daoService.findById(serviceId);

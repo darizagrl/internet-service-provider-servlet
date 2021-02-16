@@ -8,13 +8,16 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class JDBCServiceDao implements ServiceDao {
     public static final String CREATE_SERVICE = "INSERT INTO service VALUES (?)";
-    public static final String FIND_SERVICE_BY_ID = "SELECT * FROM service WHERE service.id = ?";
+    public static final String FIND_SERVICE_BY_ID = "SELECT * FROM service WHERE id = ?";
+    public static final String FIND_SERVICE_BY_NAME = "SELECT * FROM service WHERE name = ?";
     public static final String GET_ALL_SERVICE = "SELECT * FROM service ORDER BY id;";
-    public static final String UPDATE_SERV_NAME = "UPDATE service SET name=? WHERE service.id=?";
-    public static final String DELETE_SERVICE= "DELETE FROM service WHERE service.id = ?";
+    public static final String UPDATE_SERV_NAME = "UPDATE service SET name=? WHERE id=?";
+    public static final String DELETE_SERVICE = "DELETE FROM service WHERE id = ?";
+
     private final Logger logger = LogManager.getLogger(JDBCServiceDao.class);
     private final Connection connection;
 
@@ -23,21 +26,20 @@ public class JDBCServiceDao implements ServiceDao {
     }
 
     @Override
-    public void create(Service entity) {
+    public void create(Service service) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_SERVICE, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setString(1, service.getName());
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    entity.setId(generatedKeys.getInt(1));
+                    service.setId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating service failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
-            logger.error("service error");
+            logger.error("Service creation error");
         }
-
     }
 
     @Override
@@ -53,7 +55,7 @@ public class JDBCServiceDao implements ServiceDao {
                 service.setId(servId);
             }
         } catch (SQLException e) {
-            logger.error("service error");
+            logger.error("No service founded");
         }
         return service;
     }
@@ -73,7 +75,7 @@ public class JDBCServiceDao implements ServiceDao {
                 list.add(service);
             }
         } catch (SQLException e) {
-            logger.error("service error");
+            logger.error("Could not find service");
         }
         return list;
     }
@@ -101,5 +103,24 @@ public class JDBCServiceDao implements ServiceDao {
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public Service findByName(String name) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_SERVICE_BY_NAME)) {
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int servId = resultSet.getInt(1);
+                String servName = resultSet.getString(2);
+                Service service;
+                service = new Service(servName);
+                service.setId(servId);
+                return service;
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        return null;
     }
 }

@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 
 public class CommandUtility {
     static void setUserRole(HttpServletRequest request,
-                            String role, String email) {
+                            User.Role role, String email) {
         HttpSession session = request.getSession();
         ServletContext context = request.getServletContext();
         context.setAttribute("email", email);

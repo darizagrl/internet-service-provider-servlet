@@ -7,10 +7,13 @@ public class Tariff {
     private String name;
     private String description;
     private double price;
+    private Integer serviceId;
     private Service service;
     private List<User> users;
+
     public Tariff() {
     }
+
     public Tariff(String name, String description, double price) {
         this.name = name;
         this.description = description;
@@ -49,6 +52,14 @@ public class Tariff {
         this.price = price;
     }
 
+    public Integer getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Integer serviceId) {
+        this.serviceId = serviceId;
+    }
+
     public Service getService() {
         return service;
     }
@@ -64,9 +75,10 @@ public class Tariff {
     public void setUsers(List<User> users) {
         this.users = users;
     }
+
     public boolean isConnectedToUser(User user) {
-        for(Tariff userTariff : user.getTariffs()) {
-            if(userTariff.getId().equals(this.id)) {
+        for (Tariff userTariff : user.getTariffs()) {
+            if (userTariff.getId().equals(this.id)) {
                 return true;
             }
         }

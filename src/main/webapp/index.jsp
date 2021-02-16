@@ -1,9 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <%@ page isELIgnored="false" %>
-<%@ page session="true" %>
 
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="messages"/>
@@ -21,21 +20,39 @@
         <div class="container my-2">
             <h1><fmt:message key="tariff.list"/></h1>
             <div>
-                <a href="${pageContext.request.contextPath}/app/showNewTariff" class="btn btn-primary btn-sm mb-3">Add Tariff</a>
+                <a href="${pageContext.request.contextPath}/admin/showNewTariff" class="btn btn-primary btn-sm mb-3"><fmt:message key="tariff.add"/></a>
             </div>
+            <div class="container">
+                <table class="table table-striped table-responsive-md">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="tariff" items="${tariffList}">
+                        <option value="${tariff.name}">${tariff.getName()}</option>
+                        <option value="${tariff.description}">${tariff.getDescription()}</option>
+                        <option value="${tariff.price}">${tariff.getPrice()}</option>
 
+                    </c:forEach>
+                    </tbody>
+                </table>
+            </div>
             <div class="container">
 
                 <div class="row">
                     <div class="col">
                         <ul class="nav nav-tabs mt-5" id="myTabs">
                             <li class="nav-item"><a href="#tab1" data-url="/tab1" class="nav-link active"
-                                                    >Phone</a></li>
+                            >Phone</a></li>
                             <li class="nav-item"><a href="#tab2" data-url="/tab2" class="nav-link"
-                                                    >TV</a>
+                            >TV</a>
                             </li>
                             <li class="nav-item"><a href="#tab3" data-url="/tab3" class="nav-link"
-                                                    >Internet</a></li>
+                            >Internet</a></li>
                         </ul>
 
                         <div class="tab-content pt-3">

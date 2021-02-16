@@ -3,15 +3,18 @@ package com.provider.controller.command;
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Registration implements Command {
+    private final Logger logger = LogManager.getLogger(Registration.class);
+
     @Override
-    public String execute(HttpServletRequest request) throws java.lang.Exception {
+    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         try {
             String firstname = request.getParameter("firstname");
             String lastname = request.getParameter("lastname");
@@ -19,7 +22,6 @@ public class Registration implements Command {
             String confirmEmail = request.getParameter("confirmEmail");
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
-            String role = "user";
             System.out.println("user email:" + email);
             System.out.println("user password:" + password);
             if (email == null || email.equals("") || password == null || password.equals("") ||
@@ -49,16 +51,14 @@ public class Registration implements Command {
                     return "/registration.jsp";
                 }
             }
-            User user = new User(firstname, lastname, email, password, role);
+            User user = new User(firstname, lastname, email, password, User.Role.USER);
             dao.create(user);
             return "redirect:/";
         } catch (SQLException e) {
-            Logger logger = Logger.getLogger("log");
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             throw new SQLException();
         } catch (ClassNotFoundException e) {
-            Logger logger = Logger.getLogger("log");
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }

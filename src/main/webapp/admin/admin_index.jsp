@@ -2,21 +2,24 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <c:set var="ByNameASC" value="ByName(a-z)"/>
 <c:set var="ByNameDESC" value="ByName(z-a)"/>
 <c:set var="ByPrice" value="ByPrice"/>
+
 <fmt:setLocale value="${sessionScope.lang}"/>
 <fmt:setBundle basename="resources"/>
 <html  lang="${sessionScope.lang}">
 <head>
-    <meta charset="ISO-8859-1">
-    <title>Internet Provider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><fmt:message key="tariff.list"/></title>
+    <meta charset="utf-8">
 </head>
 <body>
 <jsp:include page="admin_header.jsp"/>
 <div class="container pt-3">
-    <h1 class="text-center">Internet Provider</h1><br>
-    <form action="${pageContext.request.contextPath}/admin/adminMain">
+    <h1 class="text-center"><fmt:message key="tariff.list"/></h1><br>
+    <form action="${pageContext.request.contextPath}api/admin/admin_index">
         <div class="row">
             <div class="col-sm-6">
                 <h4>Service:</h4>
@@ -78,7 +81,7 @@
     </form><br>
     <div class="row">
         <div class="col-sm-12">
-            <form action="${pageContext.request.contextPath}/admin/createTariff">
+            <form action="${pageContext.request.contextPath}/admin/new_tariff.jsp">
                 <button type="submit" class="btn btn-success" style="width: 100%;">Add new tariff</button>
             </form>
         </div>

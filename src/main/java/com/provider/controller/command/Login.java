@@ -1,11 +1,7 @@
 package com.provider.controller.command;
 
 import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.ServiceDao;
-import com.provider.model.dao.TariffDao;
 import com.provider.model.dao.UserDao;
-import com.provider.model.entity.Service;
-import com.provider.model.entity.Tariff;
 import com.provider.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,14 +24,14 @@ public class Login implements Command {
 
         for (User user : userList) {
             if (email.equals(user.getEmail()) && password.equals(user.getPassword())) {
-                if (user.getRole().equals("admin")) {
-                    CommandUtility.setUserRole(request, "admin", email);
+                if (user.getRole().equals(User.Role.ADMIN)) {
+                    CommandUtility.setUserRole(request, User.Role.ADMIN, email);
                     CommandUtility.setUserAsAttribute(request, user);
-                    return "redirect:/admin/adminMain";
-                } else if (user.getRole().equals("user")) {
-                    CommandUtility.setUserRole(request, "user", email);
+                    return "redirect:/admin/admin_index.jsp";
+                } else {
+                    CommandUtility.setUserRole(request, User.Role.USER, email);
                     CommandUtility.setUserAsAttribute(request, user);
-                    return "redirect:/user/userMain";
+                    return "redirect:/user/user_index.jsp";
                 }
             }
         }

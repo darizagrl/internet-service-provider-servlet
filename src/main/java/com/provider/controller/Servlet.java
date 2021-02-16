@@ -1,20 +1,20 @@
 package com.provider.controller;
 
-import com.provider.controller.command.*;
 import com.provider.controller.command.Exception;
+import com.provider.controller.command.*;
 import com.provider.controller.command.admin.AdminMainCommand;
+import com.provider.controller.command.admin.CreateNewTariffCommand;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Servlet extends HttpServlet {
-    private Map<String, Command> commands = new HashMap<>();
+
+    private final Map<String, Command> commands = new HashMap<>();
 
     public void init(ServletConfig servletConfig) {
         commands.put("", new MainPage());
@@ -26,7 +26,9 @@ public class Servlet extends HttpServlet {
         commands.put("exception", new Exception());
 
         commands.put("admin/", new AdminMainCommand());
-        commands.put("admin/adminMain", new AdminMainCommand());
+        commands.put("admin/admin_index", new AdminMainCommand());
+        commands.put("admin/userManagement", new AdminMainCommand());
+        commands.put("admin/showNewTariff", new CreateNewTariffCommand());
     }
 
 
@@ -41,9 +43,7 @@ public class Servlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
             String path = request.getRequestURI();
-//            System.out.println(path);
             path = path.replaceAll(".*/app/", "");
-//            System.out.println(path);
             Command command = commands.get(path);
             String page;
             page = command.execute(request);

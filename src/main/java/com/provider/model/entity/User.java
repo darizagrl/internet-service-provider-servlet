@@ -9,12 +9,16 @@ public class User {
     private String lastname;
     private String email;
     private String password;
-    private String role;
+    private Role role;
     private List<Tariff> tariffs;
     private Double balance;
     private boolean isBlocked;
 
-    public User(String firstname, String lastname, String email, String password, String role, Double balance, boolean isBlocked) {
+    public enum Role {
+        USER, ADMIN;
+    }
+
+    public User(String firstname, String lastname, String email, String password, Role role, Double balance, boolean isBlocked) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -24,14 +28,19 @@ public class User {
         this.isBlocked = false;
     }
 
-    public User(String firstname, String lastname, String email, String password, String role) {
+    public User(String firstname, String lastname, String email, String password, Role role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
         this.role = role;
     }
-
+    public User(String firstname, String lastname, String email, String password) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+    }
     public int getId() {
         return id;
     }
@@ -72,11 +81,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -124,13 +133,11 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
-                ", tariffs=" + tariffs +
                 ", balance=" + balance +
                 ", isBlocked=" + isBlocked +
                 '}';

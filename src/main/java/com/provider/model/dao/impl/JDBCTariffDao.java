@@ -21,7 +21,7 @@ public class JDBCTariffDao implements TariffDao {
     @Override
     public List<Tariff> findAllByServiceId(int serviceId) {
         List<Tariff> list = new ArrayList<>();
-        String sql = "SELECT * FROM tariff INNER JOIN service on tariff.service_id = service.id WHERE tariff.service_id=?;";
+        String sql = "SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service on tariff.service_id = service.id WHERE tariff.service_id=?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, serviceId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -40,7 +40,7 @@ public class JDBCTariffDao implements TariffDao {
                 list.add(tariff);
             }
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error("Cannot find tariff");
         }
         return list;
     }
@@ -48,7 +48,7 @@ public class JDBCTariffDao implements TariffDao {
     @Override
     public List<Tariff> findByServiceSortedASC(int serviceId) {
         List<Tariff> list = new ArrayList<>();
-        String sql = "SELECT * FROM tariff INNER JOIN service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name ASC;";
+        String sql = "SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, serviceId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -76,7 +76,7 @@ public class JDBCTariffDao implements TariffDao {
     public List<Tariff> findByServiceSortedDESC(int serviceId) {
         List<Tariff> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=? ORDER BY tariff.name DESC;";
+        String sql = "SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=? ORDER BY tariff.name DESC;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, serviceId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -104,7 +104,7 @@ public class JDBCTariffDao implements TariffDao {
     public List<Tariff> findByServiceSortedByPrice(int serviceId) {
         List<Tariff> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=? ORDER BY tariff.price;";
+        String sql = "SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=? ORDER BY tariff.price;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, serviceId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -129,23 +129,30 @@ public class JDBCTariffDao implements TariffDao {
     }
 
     @Override
-    public void create(Tariff entity) {
+    public void create(Tariff tariff) {
         String sql = "INSERT INTO tariff (name, description, price, service_id) VALUES (?,?,?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            preparedStatement.setString(1, entity.getName());
-            preparedStatement.setString(2, entity.getDescription());
-            preparedStatement.setDouble(3, entity.getPrice());
-            preparedStatement.setInt(4, entity.getService().getId());
+            preparedStatement.setString(1, tariff.getName());
+            preparedStatement.setString(2, tariff.getDescription());
+            preparedStatement.setDouble(3, tariff.getPrice());
+            preparedStatement.setInt(4, tariff.getService().getId());
             preparedStatement.executeUpdate();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    tariff.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Tariff creation has failed, no ID obtained.");
+                }
+            }
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
     }
 
     @Override
     public Tariff findById(int id) {
         Tariff tariff = null;
-        String sql = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.id=?;";
+        String sql = "SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.id=?;";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -163,7 +170,7 @@ public class JDBCTariffDao implements TariffDao {
                 tariff.setService(service);
             }
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
         return tariff;
     }
@@ -174,7 +181,7 @@ public class JDBCTariffDao implements TariffDao {
         Statement statement;
         try {
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM tariff INNER JOIN service on tariff.service_id = service.id;");
+            ResultSet resultSet = statement.executeQuery("SELECT tariff.id, tariff.name, description, price, service_id, service.name FROM tariff INNER JOIN service on tariff.service_id = service.id;");
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String name = resultSet.getString(2);
@@ -190,7 +197,7 @@ public class JDBCTariffDao implements TariffDao {
                 list.add(tariff);
             }
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
         return list;
     }
@@ -206,7 +213,7 @@ public class JDBCTariffDao implements TariffDao {
             preparedStatement.setInt(5, entity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
     }
 
@@ -217,7 +224,7 @@ public class JDBCTariffDao implements TariffDao {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
     }
 

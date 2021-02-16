@@ -1,7 +1,6 @@
 package com.provider.model.dao.impl;
 
 import com.provider.model.dao.UserDao;
-import com.provider.model.entity.Role;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
 import com.provider.model.entity.User;
@@ -22,20 +21,19 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public void create(User user) {
-        String sql = "Insert into users (firstname,lastname, email ,password, isblocked, balance) Values (?,?,?,?,?,?)";
+        String sql = "Insert into users (firstname,lastname, email, password) Values (?,?,?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setBoolean(5, user.isBlocked());
-            preparedStatement.setDouble(6, user.getBalance());
+//            user.setRole(User.Role.USER);
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     user.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new SQLException("Creating user failed, no ID obtained.");
+                    throw new SQLException("User creation has failed, no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -46,10 +44,7 @@ public class JDBCUserDao implements UserDao {
     @Override
     public User findById(int id) {
         User user = null;
-        String sql = "SELECT users.id, firstname, lastname, email, password, isblocked, balance, name\n" +
-                "\tFROM public.users, public.users_roles\n" +
-                "\tinner join public.role on public.users_roles.role_id=public.role.id\n" +
-                "\tWHERE users.id = ?";
+        String sql = "SELECT * FROM public.users WHERE users.id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -61,8 +56,7 @@ public class JDBCUserDao implements UserDao {
                 String password = resultSet.getString(5);
                 boolean isBlocked = resultSet.getBoolean(6);
                 double balance = resultSet.getDouble(7);
-                String role = resultSet.getString(8);
-                user = new User(firstname, lastname, email, password, role);
+                user = new User(firstname, lastname, email, password);
                 user.setId(userId);
                 user.setBalance(balance);
                 user.setBlocked(isBlocked);
@@ -76,10 +70,8 @@ public class JDBCUserDao implements UserDao {
     @Override
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
-        Statement statement;
-        try {
-            statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM users ORDER BY id;");
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM public.users ORDER BY users.id;");
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String firstname = resultSet.getString(2);
@@ -88,8 +80,7 @@ public class JDBCUserDao implements UserDao {
                 String password = resultSet.getString(5);
                 boolean isBlocked = resultSet.getBoolean(6);
                 double balance = resultSet.getDouble(7);
-                String role = "admin";
-                User user = new User(firstname, lastname, email, password, role);
+                User user = new User(firstname, lastname, email, password);
                 user.setId(id);
                 user.setBalance(balance);
                 user.setBlocked(isBlocked);
@@ -164,7 +155,7 @@ public class JDBCUserDao implements UserDao {
 
     @Override
     public void insertUserTariffs(int userId, int tariffId) {
-        String sql = "INSERT INTO users_tariffs (user_id, tariff_id) VALUES (?,?);";
+        String sql = "INSERT INTO users_tariffs(user_id, tariff_id) VALUES (?,?);";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tariffId);

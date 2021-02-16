@@ -11,20 +11,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-public class CreateTariffCommand implements Command {
+public class CreateNewTariffCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws Exception {
         try {
             DaoFactory factory = DaoFactory.getInstance();
             ServiceDao serviceDao = factory.createServiceDao();
             List<Service> serviceList = serviceDao.findAll();
-            int serviceId;
-            if (request.getParameter("serviceId") == null) {
-                serviceId = serviceList.get(0).getId();
+            int type;
+            if (request.getParameter("type") == null) {
+                type = serviceList.get(0).getId();
             } else {
-                serviceId = Integer.parseInt(request.getParameter("serviceId"));
+                type = Integer.parseInt(request.getParameter("type"));
             }
-            Service service = serviceDao.findById(serviceId);
+            Service service = serviceDao.findById(type);
             request.setAttribute("serviceAttr", service);
             request.setAttribute("serviceList", serviceList);
             double price;
@@ -37,23 +37,23 @@ public class CreateTariffCommand implements Command {
                 }
             } catch (NumberFormatException e) {
                 request.setAttribute("message", "Wrong number format");
-                return "/admin/createTariff.jsp";
+                return "/admin/new_tariff.jsp";
             }
             String name = request.getParameter("name");
             String description = request.getParameter("description");
 
             if (name == null || name.equals("") || description == null || description.equals("")) {
                 request.setAttribute("message", "You have empty fields.");
-                return "/admin/createTariff.jsp";
+                return "/admin/new_tariff.jsp";
             }
             if (price < 0 || price > 10000) {
                 request.setAttribute("message", "Max price = 10000, min = 0");
-                return "/admin/createTariff.jsp";
+                return "/admin/new_tariff.jsp";
             }
 
             if (name.length() < 4 || name.length() > 255) {
                 request.setAttribute("message", "Minimum length of name = 4.");
-                return "/admin/createTariff.jsp";
+                return "/admin/new_tariff.jsp";
             }
 
             TariffDao dao = factory.createTariffDao();
@@ -61,13 +61,13 @@ public class CreateTariffCommand implements Command {
             for (Tariff tariff : list) {
                 if (name.equals(tariff.getName())) {
                     request.setAttribute("message", "This tariff name already exist.");
-                    return "/admin/createTariff.jsp";
+                    return "/admin/new_tariff.jsp";
                 }
             }
             Tariff tariff = new Tariff(name, description, price);
             tariff.setService(service);
             dao.create(tariff);
-            return "/admin/adminMain";
+            return "/admin/admin_index";
         } catch (SQLException e) {
             throw new SQLException();
         } catch (ClassNotFoundException e) {

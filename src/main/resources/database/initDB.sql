@@ -4,6 +4,7 @@
 -- DROP SEQUENCE IF EXISTS users_id_seq;
 -- DROP SEQUENCE IF EXISTS roles_id_seq;
 -- DROP SEQUENCE IF EXISTS tariff_id_seq CASCADE ;
+drop table  users cascade;
 CREATE TABLE IF NOT EXISTS users
 (
     id        SERIAL PRIMARY KEY,
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS service
     id   SERIAL PRIMARY KEY,
     name varchar(45) NOT NULL
 );
+-- drop table  tariff;
 CREATE TABLE IF NOT EXISTS tariff
 (
     id          SERIAL PRIMARY KEY,
