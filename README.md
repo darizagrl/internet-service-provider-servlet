@@ -1,4 +1,4 @@
-# internet-service-provider
+# Internet Service Provider
 *Web application using servlet.*
 
 ### Internet Service provider
