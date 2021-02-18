@@ -5,21 +5,23 @@ import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
 public class MainPageCommand implements Command {
+    private final Logger logger = LogManager.getLogger(MainPageCommand.class);
+
     @Override
-    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request) throws java.lang.Exception {
         try {
             DaoFactory factory = DaoFactory.getInstance();
             ServiceDao dao = factory.getServiceDao();
             TariffDao daoTariff = factory.getTariffDao();
-
-            List<Service> serviceList;
-            serviceList = dao.findAll();
+            List<Service> serviceList = dao.findAll();
             int serviceId;
             String sortBy;
             if (request.getParameter("serviceId") == null) {
@@ -47,7 +49,7 @@ public class MainPageCommand implements Command {
                     tariffList = daoTariff.findByServiceSortedByPriceDESC(serviceId);
                     break;
                 default:
-                    tariffList = daoTariff.findByServiceSortedASC(serviceId);
+                    tariffList = daoTariff.findAllByServiceId(serviceId);
                     break;
             }
             Service service = dao.findById(serviceId);
@@ -55,10 +57,12 @@ public class MainPageCommand implements Command {
             request.setAttribute("serviceAttr", service);
             request.setAttribute("tariffList", tariffList);
             request.setAttribute("serviceList", serviceList);
-            return "/main.jsp";
+            return "/index.jsp";
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException();
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }

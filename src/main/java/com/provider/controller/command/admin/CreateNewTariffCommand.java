@@ -41,23 +41,23 @@ public class CreateNewTariffCommand implements Command {
                 }
             } catch (NumberFormatException e) {
                 request.setAttribute("message", "Wrong number format");
-                return "/admin/new_tariff.jsp";
+                return "/admin/tariff_add.jsp";
             }
             String name = request.getParameter("name");
             String description = request.getParameter("description");
 
             if (name == null || name.equals("") || description == null || description.equals("")) {
                 request.setAttribute("message", "You have empty fields.");
-                return "/admin/new_tariff.jsp";
+                return "/admin/tariff_add.jsp";
             }
             if (price < 0 || price > 10000) {
                 request.setAttribute("message", "Max price = 10000, min = 0");
-                return "/admin/new_tariff.jsp";
+                return "/admin/tariff_add.jsp";
             }
 
             if (name.length() < 4 || name.length() > 255) {
                 request.setAttribute("message", "Minimum length of name = 4.");
-                return "/admin/new_tariff.jsp";
+                return "/admin/tariff_add.jsp";
             }
 
             TariffDao dao = factory.getTariffDao();
@@ -65,7 +65,7 @@ public class CreateNewTariffCommand implements Command {
             for (Tariff tariff : list) {
                 if (name.equals(tariff.getName())) {
                     request.setAttribute("message", "This tariff name already exist.");
-                    return "/admin/new_tariff.jsp";
+                    return "/admin/tariff_add.jsp";
                 }
             }
             Tariff tariff = new Tariff(name, description, price);

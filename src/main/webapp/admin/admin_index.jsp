@@ -22,10 +22,13 @@
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1>
     <div>
         <span>
-            <a type="submit" class="btn btn-info col-4" href="${pageContext.request.contextPath}/admin/new_tariff">
+            <a type="submit" class="btn btn-info col-4" href="${pageContext.request.contextPath}/admin/tariff_add">
                 <fmt:message key="tariff.add"/></a>
         </span>
     </div>
+        <div class="btn-group">
+            <a href="${pageContext.request.contextPath}/admin/service_add" class="btn btn-success" role="button">Create Service</a>
+        </div>
     <form action="${pageContext.request.contextPath}/admin/">
         <div class="row">
             <div class="col-md-3">

@@ -33,7 +33,8 @@
             <input id="newPrice" class="form-control" value="${tariff.getPrice()}" name="newPrice"/>
         </div>
         <div class="form-group">
-            <select name="serviceId" class="form-select" aria-label="Default select example">
+            <label for="serviceId"><fmt:message key="service.type"/></label>
+            <select class="form-control" name="serviceId" id="serviceId">
                 <c:forEach var="service" items="${serviceList}">
                     <c:choose>
                         <c:when test="${currentService.getId() == service.getId()}">

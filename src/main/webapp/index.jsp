@@ -15,13 +15,12 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><fmt:message key="tariff.list"/></title>
-    <meta charset="utf-8">
 </head>
 <body>
 <jsp:include page="header.jsp"/>
 <div class="container pt-3">
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1><br>
-    <form action="${pageContext.request.contextPath}/">
+    <form action="${pageContext.request.contextPath}/index">
         <div class="row">
             <div class="col-sm-4">
                 <h4>Service:</h4>
@@ -83,7 +82,7 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <button type="submit" class="btn btn-info col-4">Show Tariffs</button>
+                <button type="submit" class="btn btn-info col-4"><fmt:message key="show"/></button>
             </div>
         </div>
     </form>
@@ -91,10 +90,10 @@
     <table class="table table-striped" id="tariffsTable">
         <thead>
         <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Type</th>
+            <th><fmt:message key="tariff.name"/></th>
+            <th><fmt:message key="tariff.description"/></th>
+            <th><fmt:message key="tariff.price"/></th>
+            <th><fmt:message key="service.type"/></th>
         </thead>
         <tbody>
         <c:forEach var="tariff" items="${tariffList}">

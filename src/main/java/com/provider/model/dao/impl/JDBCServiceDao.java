@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JDBCServiceDao implements ServiceDao {
-    public static final String CREATE_SERVICE = "INSERT INTO service VALUES (?)";
+    public static final String CREATE_SERVICE = "INSERT INTO service(name) VALUES (?)";
     public static final String FIND_SERVICE_BY_ID = "SELECT * FROM service WHERE id = ?";
     public static final String FIND_SERVICE_BY_NAME = "SELECT * FROM service WHERE name = ?";
     public static final String GET_ALL_SERVICE = "SELECT * FROM service ORDER BY id;";
@@ -37,7 +37,7 @@ public class JDBCServiceDao implements ServiceDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Service creation error");
+            logger.error(e.getMessage());
         }
     }
 
@@ -54,7 +54,7 @@ public class JDBCServiceDao implements ServiceDao {
                 service.setId(servId);
             }
         } catch (SQLException e) {
-            logger.error("No service founded");
+            logger.error(e.getMessage());
         }
         return service;
     }
@@ -74,7 +74,7 @@ public class JDBCServiceDao implements ServiceDao {
                 list.add(service);
             }
         } catch (SQLException e) {
-            logger.error("Could not find service");
+            logger.error(e.getMessage());
         }
         return list;
     }
@@ -86,7 +86,7 @@ public class JDBCServiceDao implements ServiceDao {
             preparedStatement.setInt(2, entity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("service error");
+            logger.error(e.getMessage());
         }
     }
 
@@ -96,7 +96,7 @@ public class JDBCServiceDao implements ServiceDao {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("service error");
+            logger.error(e.getMessage());
         }
     }
 

@@ -2,10 +2,7 @@ package com.provider.controller;
 
 import com.provider.controller.command.Exception;
 import com.provider.controller.command.*;
-import com.provider.controller.command.admin.AdminMainCommand;
-import com.provider.controller.command.admin.CreateNewTariffCommand;
-import com.provider.controller.command.admin.DeleteTariffCommand;
-import com.provider.controller.command.admin.EditTariffCommand;
+import com.provider.controller.command.admin.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +18,6 @@ public class Servlet extends HttpServlet {
     public void init(ServletConfig servletConfig) {
         commands.put("", new MainPageCommand());
         commands.put("index", new MainPageCommand());
-        commands.put("main", new MainPageCommand());
         commands.put("login", new Login());
         commands.put("logout", new Logout());
         commands.put("registration", new Registration());
@@ -30,9 +26,10 @@ public class Servlet extends HttpServlet {
         commands.put("admin/", new AdminMainCommand());
         commands.put("admin/admin_index", new AdminMainCommand());
         commands.put("admin/user_management", new AdminMainCommand());
-        commands.put("admin/new_tariff", new CreateNewTariffCommand());
+        commands.put("admin/tariff_add", new CreateNewTariffCommand());
         commands.put("admin/tariff_delete", new DeleteTariffCommand());
         commands.put("admin/tariff_edit", new EditTariffCommand());
+        commands.put("admin/service_add", new CreateNewServiceCommand());
     }
 
 

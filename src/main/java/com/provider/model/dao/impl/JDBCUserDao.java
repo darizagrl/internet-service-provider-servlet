@@ -1,6 +1,7 @@
 package com.provider.model.dao.impl;
 
 import com.provider.model.dao.UserDao;
+import com.provider.model.entity.Role;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
 import com.provider.model.entity.User;
@@ -14,20 +15,30 @@ import java.util.List;
 public class JDBCUserDao implements UserDao {
     private final Logger logger = LogManager.getLogger(JDBCUserDao.class);
     private final Connection connection;
+    public static final String CREATE_USER = "insert into users (firstname, lastname, email, password) values (?,?,?,?)";
+    public static final String INSERT_USER_ROLE = "insert into users_roles (user_id, role_id) values (?,?)";
+    public static final String FIND_USER = "SELECT * FROM public.users WHERE users.id = ?";
+    public static final String FIND_ALL_USERS_AND_ROLES = "select usr.*, rl.* FROM public.users usr join public.users_roles ur on usr.id=ur.user_id join public.role rl on rl.id=ur.role_id;";
+    public static final String FIND_ALL_USERS = "SELECT * FROM public.users ORDER BY users.id;";
+    public static final String UPDATE_USER = "UPDATE users SET firstname=?,lastname=?, email=?,password=?, isblocked=?,balance=? WHERE users.id=?;";
+    public static final String DELETE_USER = "DELETE FROM users WHERE users.id = ?;";
+    public static final String FIND_USER_TARIFFS = "SELECT * FROM users_tariffs INNER JOIN tariff ON users_tariffs.tariff_id = tariff.id=tarifF.id\r\n" +
+            " inner join service on tariff.service_id= service.id where user_id = ?;";
+    public static final String INSERT_USER_TARIFF = "INSERT INTO users_tariffs(user_id, tariff_id) VALUES (?,?);";
+    public static final String REMOVE_USER_TARIFF = "DELETE FROM users_tariffs where user_id = ? AND tariff_id=?;";
 
     public JDBCUserDao(Connection connection) {
         this.connection = connection;
     }
 
+    //TODO transaction
     @Override
     public void create(User user) {
-        String sql = "Insert into users (firstname,lastname, email, password) Values (?,?,?,?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            user.setRole(User.Role.USER);
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -37,15 +48,23 @@ public class JDBCUserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Cannot create user");
+            logger.error(e.getMessage());
+        }
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_ROLE)) {
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, 2);
+            Role role = new Role(2, "user");
+            user.setRole(role);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
         }
     }
 
     @Override
     public User findById(int id) {
         User user = null;
-        String sql = "SELECT * FROM public.users WHERE users.id = ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -62,7 +81,7 @@ public class JDBCUserDao implements UserDao {
                 user.setBlocked(isBlocked);
             }
         } catch (SQLException e) {
-            logger.error("Cannot find user");
+            logger.error(e.getMessage());
         }
         return user;
     }
@@ -71,7 +90,7 @@ public class JDBCUserDao implements UserDao {
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM public.users ORDER BY users.id;");
+            ResultSet resultSet = statement.executeQuery(FIND_ALL_USERS_AND_ROLES);
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String firstname = resultSet.getString(2);
@@ -80,22 +99,25 @@ public class JDBCUserDao implements UserDao {
                 String password = resultSet.getString(5);
                 boolean isBlocked = resultSet.getBoolean(6);
                 double balance = resultSet.getDouble(7);
+                Integer roleId = resultSet.getInt(8);
+                String roleName = resultSet.getString(9);
                 User user = new User(firstname, lastname, email, password);
                 user.setId(id);
                 user.setBalance(balance);
                 user.setBlocked(isBlocked);
+                Role role = new Role(roleId, roleName);
+                user.setRole(role);
                 list.add(user);
             }
         } catch (SQLException e) {
-            logger.error("Cannot find users");
+            logger.error(e.getMessage());
         }
         return list;
     }
 
     @Override
     public void update(User entity) {
-        String sql = "UPDATE users SET firstname=?,lastname=?, email=?,password=?, isblocked=?,balance=? WHERE users.id=?;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
             preparedStatement.setString(1, entity.getFirstname());
             preparedStatement.setString(2, entity.getLastname());
             preparedStatement.setString(3, entity.getEmail());
@@ -105,18 +127,17 @@ public class JDBCUserDao implements UserDao {
             preparedStatement.setInt(7, entity.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot update user");
+            logger.error(e.getMessage());
         }
     }
 
     @Override
     public void delete(int id) {
-        String sql = "DELETE FROM users WHERE users.id = ?;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot delete user");
+            logger.error(e.getMessage());
         }
     }
 
@@ -127,9 +148,7 @@ public class JDBCUserDao implements UserDao {
     @Override
     public User findUserTariffs(User user) {
         List<Tariff> list = new ArrayList<>();
-        String sql = "SELECT * FROM users_tariffs INNER JOIN tariff ON users_tariffs.tariff_id = tariff.id=tarifF.id\r\n" +
-                " inner join service on tariff.service_id= service.id where user_id = ?;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_TARIFFS)) {
             preparedStatement.setInt(1, user.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -148,32 +167,30 @@ public class JDBCUserDao implements UserDao {
             }
             user.setTariffs(list);
         } catch (SQLException e) {
-            logger.error("Cannot find user's tariffs");
+            logger.error(e.getMessage());
         }
         return user;
     }
 
     @Override
     public void insertUserTariffs(int userId, int tariffId) {
-        String sql = "INSERT INTO users_tariffs(user_id, tariff_id) VALUES (?,?);";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_TARIFF, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tariffId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot insert tariff to user");
+            logger.error(e.getMessage());
         }
     }
 
     @Override
     public void removeUserTariffs(int userId, int tariffId) {
-        String sql = "DELETE FROM users_tariffs where user_id = ? AND tariff_id=?;";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_USER_TARIFF)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tariffId);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Cannot remove tariff from user");
+            logger.error(e.getMessage());
         }
     }
 }

@@ -2,6 +2,7 @@ package com.provider.controller.command;
 
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.UserDao;
+import com.provider.model.entity.Role;
 import com.provider.model.entity.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,7 @@ public class Registration implements Command {
                     return "/registration.jsp";
                 }
             }
-            User user = new User(firstname, lastname, email, password, User.Role.USER);
+            User user = new User(firstname, lastname, email, password);
             dao.create(user);
             return "redirect:/";
         } catch (SQLException e) {

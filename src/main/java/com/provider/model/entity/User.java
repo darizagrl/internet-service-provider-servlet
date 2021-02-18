@@ -14,10 +14,6 @@ public class User {
     private Double balance;
     private boolean isBlocked;
 
-    public enum Role {
-        USER, ADMIN;
-    }
-
     public User(String firstname, String lastname, String email, String password, Role role, Double balance, boolean isBlocked) {
         this.firstname = firstname;
         this.lastname = lastname;

@@ -16,7 +16,7 @@
 <body>
 <jsp:include page="admin_header.jsp"/>
 <div class="container">
-    <form method="post" action="${pageContext.request.contextPath}/admin/new_tariff">
+    <form method="post" action="${pageContext.request.contextPath}/admin/tariff_add">
         <h2 class="text-center"><fmt:message key="tariff.management"/></h2>
         <div class="form-group">
             <label for="name" class="control-label"><fmt:message key="tariff.name"/></label>
@@ -33,7 +33,8 @@
             <input id="price" class="form-control" placeholder="0.0" name="price"/>
         </div>
         <div class="form-group">
-            <select name="serviceId" class="form-select" aria-label="Default select example" >
+            <label for="serviceId"><fmt:message key="service.type"/></label>
+            <select class="form-control" name="serviceId" id="serviceId">
                 <c:forEach var="service" items="${serviceList}">
                     <c:choose>
                         <c:when test="${serviceAttr.getId() == service.getId()}">
@@ -51,5 +52,8 @@
         </div>
     </form>
 </div>
+<script>
+    $('select').selectpicker();
+</script>
 </body>
 </html>

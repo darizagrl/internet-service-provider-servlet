@@ -10,7 +10,6 @@ import java.util.List;
 public class Login implements Command {
     @Override
     public String execute(HttpServletRequest request) throws java.lang.Exception {
-
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
@@ -24,14 +23,14 @@ public class Login implements Command {
 
         for (User user : userList) {
             if (email.equals(user.getEmail()) && password.equals(user.getPassword())) {
-                if (user.getRole().equals(User.Role.ADMIN)) {
-                    CommandUtility.setUserRole(request, User.Role.ADMIN, email);
+                if (user.getRole().getId().equals(1)) {
+                    CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
-                    return "redirect:/admin/admin_index.jsp";
+                    return "redirect:/admin/admin_index";
                 } else {
-                    CommandUtility.setUserRole(request, User.Role.USER, email);
+                    CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
-                    return "redirect:/user/user_index.jsp";
+                    return "redirect:/index";
                 }
             }
         }

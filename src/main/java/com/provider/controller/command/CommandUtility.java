@@ -1,5 +1,6 @@
 package com.provider.controller.command;
 
+import com.provider.model.entity.Role;
 import com.provider.model.entity.User;
 
 import javax.servlet.ServletContext;
@@ -9,12 +10,12 @@ import java.util.HashSet;
 
 public class CommandUtility {
     static void setUserRole(HttpServletRequest request,
-                            User.Role role, String email) {
+                            Role role, String email) {
         HttpSession session = request.getSession();
         ServletContext context = request.getServletContext();
         context.setAttribute("email", email);
         session.setAttribute("email", email);
-        session.setAttribute("role", role);
+        session.setAttribute("role", role.getId());
     }
 
     static void setUserAsAttribute(HttpServletRequest request, User user) {
