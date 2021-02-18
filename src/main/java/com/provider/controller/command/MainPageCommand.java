@@ -15,8 +15,8 @@ public class MainPageCommand implements Command {
     public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         try {
             DaoFactory factory = DaoFactory.getInstance();
-            ServiceDao dao = factory.createServiceDao();
-            TariffDao daoTariff = factory.createTariffDao();
+            ServiceDao dao = factory.getServiceDao();
+            TariffDao daoTariff = factory.getTariffDao();
 
             List<Service> serviceList;
             serviceList = dao.findAll();

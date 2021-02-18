@@ -9,7 +9,7 @@ import java.util.List;
 public class LoginService {
     public List<User> checkUserInDb(User user) throws SQLException, ClassNotFoundException {
         return DaoFactory.getInstance()
-                .createUserDao()
+                .getUserDao()
                 .findAll();
     }
 }

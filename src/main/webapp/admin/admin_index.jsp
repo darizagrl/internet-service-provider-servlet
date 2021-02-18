@@ -108,7 +108,13 @@
                     <td>${tariff.getDescription()}</td>
                     <td>${tariff.getPrice()}</td>
                     <td style="text-align: right;">
-                        <form method="post" action='<c:url value="/admin/delete_tariff" />' style="display:inline;">
+                        <form method="post" action='<c:url value="/admin/tariff_edit" />' style="display:inline;">
+                            <input type="hidden" name="tariffId" value="${tariff.getId()}">
+                            <input type="submit" class="btn btn-primary" value="Edit">
+                        </form>
+                    </td>
+                    <td style="text-align: right;">
+                        <form method="post" action='<c:url value="/admin/tariff_delete" />' style="display:inline;">
                             <input type="hidden" name="tariffId" value="${tariff.getId()}">
                             <input type="submit" class="btn btn-danger" value="<fmt:message key="user.delete"/>">
                         </form>

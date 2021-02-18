@@ -20,7 +20,7 @@ public class CreateNewTariffCommand implements Command {
     public String execute(HttpServletRequest request) throws Exception {
         try {
             DaoFactory factory = DaoFactory.getInstance();
-            ServiceDao serviceDao = factory.createServiceDao();
+            ServiceDao serviceDao = factory.getServiceDao();
             List<Service> serviceList = serviceDao.findAll();
             int serviceId;
             if (request.getParameter("serviceId") == null) {
@@ -60,7 +60,7 @@ public class CreateNewTariffCommand implements Command {
                 return "/admin/new_tariff.jsp";
             }
 
-            TariffDao dao = factory.createTariffDao();
+            TariffDao dao = factory.getTariffDao();
             List<Tariff> list = dao.findAll();
             for (Tariff tariff : list) {
                 if (name.equals(tariff.getName())) {

@@ -19,7 +19,7 @@ public class Login implements Command {
             return "/login.jsp";
         }
         DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.createUserDao();
+        UserDao dao = factory.getUserDao();
         List<User> userList = dao.findAll();
 
         for (User user : userList) {

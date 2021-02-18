@@ -16,7 +16,7 @@ public class DeleteTariffCommand implements Command {
     public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         try {
             DaoFactory factory = DaoFactory.getInstance();
-            TariffDao dao = factory.createTariffDao();
+            TariffDao dao = factory.getTariffDao();
             int id = Integer.parseInt(request.getParameter("tariffId"));
             dao.delete(id);
             return "/admin/admin_index";

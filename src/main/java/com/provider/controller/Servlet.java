@@ -5,6 +5,7 @@ import com.provider.controller.command.*;
 import com.provider.controller.command.admin.AdminMainCommand;
 import com.provider.controller.command.admin.CreateNewTariffCommand;
 import com.provider.controller.command.admin.DeleteTariffCommand;
+import com.provider.controller.command.admin.EditTariffCommand;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +31,8 @@ public class Servlet extends HttpServlet {
         commands.put("admin/admin_index", new AdminMainCommand());
         commands.put("admin/user_management", new AdminMainCommand());
         commands.put("admin/new_tariff", new CreateNewTariffCommand());
-        commands.put("admin/delete_tariff", new DeleteTariffCommand());
+        commands.put("admin/tariff_delete", new DeleteTariffCommand());
+        commands.put("admin/tariff_edit", new EditTariffCommand());
     }
 
 

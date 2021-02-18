@@ -18,9 +18,9 @@ public abstract class DaoFactory {
         return daoFactory;
     }
 
-    public abstract UserDao createUserDao() throws SQLException, ClassNotFoundException;
+    public abstract UserDao getUserDao() throws SQLException, ClassNotFoundException;
 
-    public abstract ServiceDao createServiceDao() throws SQLException, ClassNotFoundException;
+    public abstract ServiceDao getServiceDao() throws SQLException, ClassNotFoundException;
 
-    public abstract TariffDao createTariffDao() throws SQLException, ClassNotFoundException;
+    public abstract TariffDao getTariffDao() throws SQLException, ClassNotFoundException;
 }

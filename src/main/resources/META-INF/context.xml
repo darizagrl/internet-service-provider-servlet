@@ -1,0 +1,12 @@
+<Context>
+    <Resource name="jdbc/provider-servlet"
+              scope="Shareable"
+              type="javax.sql.DataSource"
+              username="root"
+              password="root"
+              driverClassName="org.postgresql.Driver"
+              url="jdbc:postgresql://localhost/provider-servlet"
+              maxActive="25"
+              maxWait="5000"
+              maxIdle="2"/>
+</Context>

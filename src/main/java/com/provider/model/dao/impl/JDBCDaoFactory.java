@@ -30,7 +30,7 @@ public class JDBCDaoFactory extends DaoFactory {
     }
 
     @Override
-    public UserDao createUserDao() throws SQLException, ClassNotFoundException {
+    public UserDao getUserDao() throws SQLException, ClassNotFoundException {
         try {
             return new JDBCUserDao(getConnection());
         } catch (SQLException e) {
@@ -43,7 +43,7 @@ public class JDBCDaoFactory extends DaoFactory {
     }
 
     @Override
-    public ServiceDao createServiceDao() throws SQLException, ClassNotFoundException {
+    public ServiceDao getServiceDao() throws SQLException, ClassNotFoundException {
         try {
             return new JDBCServiceDao(getConnection());
         } catch (SQLException e) {
@@ -56,7 +56,7 @@ public class JDBCDaoFactory extends DaoFactory {
     }
 
     @Override
-    public TariffDao createTariffDao() throws SQLException, ClassNotFoundException {
+    public TariffDao getTariffDao() throws SQLException, ClassNotFoundException {
         try {
             return new JDBCTariffDao(getConnection());
         } catch (SQLException e) {

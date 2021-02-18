@@ -43,7 +43,7 @@ public class Registration implements Command {
                 return "/registration.jsp";
             }
             DaoFactory factory = DaoFactory.getInstance();
-            UserDao dao = factory.createUserDao();
+            UserDao dao = factory.getUserDao();
             List<User> userList = dao.findAll();
             for (User user : userList) {
                 if (email.equals(user.getEmail())) {
