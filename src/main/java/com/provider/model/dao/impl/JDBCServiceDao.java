@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class JDBCServiceDao implements ServiceDao {
     public static final String CREATE_SERVICE = "INSERT INTO service VALUES (?)";

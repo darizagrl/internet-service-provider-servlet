@@ -22,13 +22,13 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/admin_index.jsp"><i
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/admin_index"><i
                     class="fa fa-home"></i></a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/app/login"><i class="fa fa-sign-in"
+            <li><a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
                                                                           aria-hidden="true"></i></a>
-            <li><a href="${pageContext.request.contextPath}/app/logout}"><i class="fa fa-sign-out"
+            <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"
                                                                             aria-hidden="true"></i></a>
             </li>
         </ul>

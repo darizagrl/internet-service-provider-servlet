@@ -1,6 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<c:set var="ByNameASC" value="By Name(a-z)"/>
+<c:set var="ByNameDESC" value="By Name(z-a)"/>
+<c:set var="ByPriceASC" value="By Price(asc)"/>
+<c:set var="ByPriceDESC" value="By Price(desc)"/>
 
 <%@ page isELIgnored="false" %>
 
@@ -16,64 +20,93 @@
 <body>
 <jsp:include page="header.jsp"/>
 <div class="container pt-3">
-    <form action="${pageContext.request.contextPath}/app/index">
-        <div class="container my-2">
-            <h1><fmt:message key="tariff.list"/></h1>
-            <div>
-                <a href="${pageContext.request.contextPath}/admin/showNewTariff" class="btn btn-primary btn-sm mb-3"><fmt:message key="tariff.add"/></a>
+    <h1 class="text-center"><fmt:message key="tariff.list"/></h1><br>
+    <form action="${pageContext.request.contextPath}/">
+        <div class="row">
+            <div class="col-sm-4">
+                <h4>Service:</h4>
             </div>
-            <div class="container">
-                <table class="table table-striped table-responsive-md">
-                    <thead>
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Description</th>
-                        <th scope="col">Price</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="tariff" items="${tariffList}">
-                        <option value="${tariff.name}">${tariff.getName()}</option>
-                        <option value="${tariff.description}">${tariff.getDescription()}</option>
-                        <option value="${tariff.price}">${tariff.getPrice()}</option>
+            <div class="col-sm-4">
+                <h4>Sort:</h4>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <select name="serviceId" class="custom-select mb-3">
+
+                    <c:forEach var="service" items="${serviceList}">
+                        <c:choose>
+                            <c:when test="${serviceAttr.getId() == service.getId()}">
+                                <option value="${service.getId()}" selected>${serviceAttr.getName()}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${service.getId()}">${service.getName()}</option>
+                            </c:otherwise>
+                        </c:choose>
 
                     </c:forEach>
-                    </tbody>
-                </table>
+                </select>
             </div>
-            <div class="container">
+            <div class="col-sm-4">
+                <select name="sort" class="custom-select">
+                    <c:choose>
+                        <c:when test="${sort.equals(ByNameASC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByNameDESC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByPriceASC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByPriceDESC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                        </c:when>
+                        <c:otherwise>
 
-                <div class="row">
-                    <div class="col">
-                        <ul class="nav nav-tabs mt-5" id="myTabs">
-                            <li class="nav-item"><a href="#tab1" data-url="/tab1" class="nav-link active"
-                            >Phone</a></li>
-                            <li class="nav-item"><a href="#tab2" data-url="/tab2" class="nav-link"
-                            >TV</a>
-                            </li>
-                            <li class="nav-item"><a href="#tab3" data-url="/tab3" class="nav-link"
-                            >Internet</a></li>
-                        </ul>
+                        </c:otherwise>
+                    </c:choose>
 
-                        <div class="tab-content pt-3">
-                            <div class="tab-pane active" id="tab1"></div>
-                            <div class="tab-pane" id="tab2"></div>
-                            <div class="tab-pane" id="tab3"></div>
-                        </div>
-                    </div>
-                </div>
+                </select>
             </div>
-            <br>
-            <br>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-info col-4">Show Tariffs</button>
+            </div>
         </div>
     </form>
+    <hr>
+    <table class="table table-striped" id="tariffsTable">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Type</th>
+        </thead>
+        <tbody>
+        <c:forEach var="tariff" items="${tariffList}">
+            <tr class="clickable-row">
+                <td>${tariff.getName()}</td>
+                <td>${tariff.getDescription()}</td>
+                <td>${tariff.getPrice()}</td>
+                <td>${tariff.getService().getName()}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
-
-<br/>
-<a class="no-background" href="${pageContext.request.contextPath}/app/login">Login</a>
-<br/>
-<a class="no-background" href="${pageContext.request.contextPath}/app/registration">Registration form</a>
-<br>
-<a class="no-background" href="${pageContext.request.contextPath}/app/exception">Exception</a>
 </body>
 </html>

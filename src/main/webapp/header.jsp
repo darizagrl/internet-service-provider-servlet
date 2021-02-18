@@ -34,10 +34,10 @@
         </div>
         <ul class="nav navbar-nav">
             <li>
-                <a href="${pageContext.request.contextPath}/app/login"><i class="fa fa-sign-in"
+                <a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
                                                                           aria-hidden="true"></i></a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/app/logout}"><i class="fa fa-sign-out"
+            <li><a href="${pageContext.request.contextPath}/logout}"><i class="fa fa-sign-out"
                                                                             aria-hidden="true"></i></a>
             </li>
         </ul>

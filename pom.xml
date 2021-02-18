@@ -65,7 +65,7 @@
                 <version>2.2</version>
                 <configuration>
                     <port>8888</port>
-                    <path>/api</path>
+                    <path>/internet_provider</path>
                 </configuration>
             </plugin>
             <plugin>

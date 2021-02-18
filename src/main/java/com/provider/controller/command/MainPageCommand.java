@@ -10,44 +10,47 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MainPage implements Command {
+public class MainPageCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         try {
             DaoFactory factory = DaoFactory.getInstance();
-            ServiceDao daoService = factory.createServiceDao();
+            ServiceDao dao = factory.createServiceDao();
             TariffDao daoTariff = factory.createTariffDao();
 
             List<Service> serviceList;
-            serviceList = daoService.findAll();
+            serviceList = dao.findAll();
             int serviceId;
             String sortBy;
-            if(request.getParameter("serviceId")== null) {
+            if (request.getParameter("serviceId") == null) {
                 serviceId = serviceList.get(0).getId();
-            }else {
-                serviceId=Integer.parseInt(request.getParameter("serviceId"));
+            } else {
+                serviceId = Integer.parseInt(request.getParameter("serviceId"));
             }
-            if(request.getParameter("sort")== null) {
-                sortBy = "ByPrice";
-            }else {
-                sortBy=request.getParameter("sort");
+            if (request.getParameter("sort") == null) {
+                sortBy = "By Name(a-z)";
+            } else {
+                sortBy = request.getParameter("sort");
             }
-            List<Tariff> tariffList = daoTariff.findAllByServiceId(1);
+            List<Tariff> tariffList;
             switch (sortBy) {
-                case "ByName(a-z)":
+                case "By Name(a-z)":
                     tariffList = daoTariff.findByServiceSortedASC(serviceId);
                     break;
-                case "ByName(z-a)":
+                case "By Name(z-a)":
                     tariffList = daoTariff.findByServiceSortedDESC(serviceId);
                     break;
-                case "ByPrice":
-                    tariffList = daoTariff.findByServiceSortedByPrice(serviceId);
+                case "By Price(asc)":
+                    tariffList = daoTariff.findByServiceSortedByPriceASC(serviceId);
+                    break;
+                case "By Price(desc)":
+                    tariffList = daoTariff.findByServiceSortedByPriceDESC(serviceId);
                     break;
                 default:
-                    tariffList = daoTariff.findAllByServiceId(serviceId);
+                    tariffList = daoTariff.findByServiceSortedASC(serviceId);
                     break;
             }
-            Service service = daoService.findById(serviceId);
+            Service service = dao.findById(serviceId);
             request.setAttribute("sort", sortBy);
             request.setAttribute("serviceAttr", service);
             request.setAttribute("tariffList", tariffList);
@@ -55,7 +58,7 @@ public class MainPage implements Command {
             return "/main.jsp";
         } catch (SQLException e) {
             throw new SQLException();
-        } catch (java.lang.Exception e) {
+        } catch (ClassNotFoundException e) {
             throw new ClassNotFoundException();
         }
     }

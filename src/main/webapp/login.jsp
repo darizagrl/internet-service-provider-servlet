@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <h1><fmt:message key="sign.in"/></h1>
-            <form method="post" action="${pageContext.request.contextPath}/app/login">
+            <form method="post" action="${pageContext.request.contextPath}/login">
                 <div class="form-group">
                     <label for="email"><fmt:message key="user.email"/></label>
                     <input type="text"

@@ -11,5 +11,7 @@ public interface TariffDao extends GenericDao<Tariff> {
 
     List<Tariff> findByServiceSortedDESC(int serviceId);
 
-    List<Tariff> findByServiceSortedByPrice(int serviceId);
+    List<Tariff> findByServiceSortedByPriceASC(int serviceId);
+
+    List<Tariff> findByServiceSortedByPriceDESC(int serviceId);
 }

@@ -27,7 +27,7 @@ public class JDBCUserDao implements UserDao {
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-//            user.setRole(User.Role.USER);
+            user.setRole(User.Role.USER);
             preparedStatement.executeUpdate();
             try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {

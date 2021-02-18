@@ -6,25 +6,29 @@ import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 
 public class CreateNewTariffCommand implements Command {
+    private final Logger logger = LogManager.getLogger(CreateNewTariffCommand.class);
+
     @Override
     public String execute(HttpServletRequest request) throws Exception {
         try {
             DaoFactory factory = DaoFactory.getInstance();
             ServiceDao serviceDao = factory.createServiceDao();
             List<Service> serviceList = serviceDao.findAll();
-            int type;
-            if (request.getParameter("type") == null) {
-                type = serviceList.get(0).getId();
+            int serviceId;
+            if (request.getParameter("serviceId") == null) {
+                serviceId = serviceList.get(0).getId();
             } else {
-                type = Integer.parseInt(request.getParameter("type"));
+                serviceId = Integer.parseInt(request.getParameter("serviceId"));
             }
-            Service service = serviceDao.findById(type);
+            Service service = serviceDao.findById(serviceId);
             request.setAttribute("serviceAttr", service);
             request.setAttribute("serviceList", serviceList);
             double price;
@@ -69,8 +73,10 @@ public class CreateNewTariffCommand implements Command {
             dao.create(tariff);
             return "/admin/admin_index";
         } catch (SQLException e) {
+            logger.error(e.getMessage());
             throw new SQLException();
         } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage());
             throw new ClassNotFoundException();
         }
     }

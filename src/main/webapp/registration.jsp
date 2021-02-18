@@ -19,7 +19,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form method="post" action="${pageContext.request.contextPath}/app/registration" accept-charset="utf-8">
+            <form method="post" action="${pageContext.request.contextPath}/registration" accept-charset="utf-8">
                 <h2 class="text-center"><fmt:message key="registration.page"/></h2>
                 <div class="form-group">
                     <label for="firstname" class="control-label"><fmt:message key="user.firstname"/></label>
@@ -47,7 +47,8 @@
                            placeholder="<fmt:message key="enter.user.password"/>" name="password">
                 </div>
                 <div class="form-group">
-                    <label for="confirmPassword" class="control-label"><fmt:message key="user.confirm.password"/></label>
+                    <label for="confirmPassword" class="control-label"><fmt:message
+                            key="user.confirm.password"/></label>
                     <input id="confirmPassword" type="password" class="form-control"
                            placeholder="<fmt:message key="user.confirm.password"/>" name="confirmPassword">
                 </div>
@@ -56,9 +57,12 @@
                     <button type="submit" class="btn btn-success"><fmt:message key="register"/></button>
                 </div>
                 <div>
-                    <span><fmt:message key="already.registered"/> <a
-                            href="${pageContext.request.contextPath}/app/login"><fmt:message
-                            key="login.here"/></a> </span>
+                    <span><fmt:message key="already.registered"/>
+                        <a
+                                href="${pageContext.request.contextPath}/login"><fmt:message
+                                key="login.here"/>
+                        </a>
+                    </span>
                 </div>
             </form>
         </div>

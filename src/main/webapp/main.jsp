@@ -1,9 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<c:set var="ByNameASC" value="ByName(a-z)"/>
-<c:set var="ByNameDESC" value="ByName(z-a)"/>
-<c:set var="ByPrice" value="ByPrice"/>
+<c:set var="ByNameASC" value="By Name(a-z)"/>
+<c:set var="ByNameDESC" value="By Name(z-a)"/>
+<c:set var="ByPriceASC" value="By Price(asc)"/>
+<c:set var="ByPriceDESC" value="By Price(desc)"/>
 
 <%@ page isELIgnored="false" %>
 
@@ -19,67 +20,73 @@
 <jsp:include page="header.jsp"/>
 <div class="container pt-3">
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1><br>
-    <form action="${pageContext.request.contextPath}/app/main">
-<%--        <div class="row">--%>
-<%--            <div class="col-sm-6">--%>
-<%--                <h4>Service:</h4>--%>
-<%--            </div>--%>
-<%--            <div class="col-sm-6">--%>
-<%--                <h4>Sort:</h4>--%>
-<%--            </div>--%>
+    <form action="${pageContext.request.contextPath}/main">
+        <div class="row">
+            <div class="col-sm-4">
+                <h4>Service:</h4>
+            </div>
+            <div class="col-sm-4">
+                <h4>Sort:</h4>
+            </div>
 
-<%--        </div>--%>
-<%--        <div class="row">--%>
-<%--            <div class="col-sm-6">--%>
-<%--                <select name="serviceId" class="custom-select mb-3">--%>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <select name="serviceId" class="custom-select mb-3">
 
-<%--                    <c:forEach var="service" items="${serviceList}">--%>
-<%--                        <c:choose>--%>
-<%--                            <c:when test="${serviceAttr.getId() == service.getId()}">--%>
-<%--                                <option value="${service.getId()}" selected>${serviceAttr.getName()}</option>--%>
-<%--                            </c:when>--%>
-<%--                            <c:otherwise>--%>
-<%--                                <option value="${service.getId()}">${service.getName()}</option>--%>
-<%--                            </c:otherwise>--%>
-<%--                        </c:choose>--%>
+                    <c:forEach var="service" items="${serviceList}">
+                        <c:choose>
+                            <c:when test="${serviceAttr.getId() == service.getId()}">
+                                <option value="${service.getId()}" selected>${serviceAttr.getName()}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${service.getId()}">${service.getName()}</option>
+                            </c:otherwise>
+                        </c:choose>
 
-<%--                    </c:forEach>--%>
-<%--                </select>--%>
-<%--            </div>--%>
-            <div class="col-sm-6">
-<%--                <select name="sort" class="custom-select">--%>
-<%--                    <c:choose>--%>
-<%--                        <c:when test="${sort.equals(ByNameASC)}">--%>
-<%--                            <option selected value="${sort}">${sort}</option>--%>
-<%--                            <option value="ByName(z-a)">ByName(z-a)</option>--%>
-<%--                            <option value="ByPrice">ByPrice</option>--%>
-<%--                        </c:when>--%>
-<%--                        <c:when test="${sort.equals(ByNameDESC)}">--%>
-<%--                            <option selected value="${sort}">${sort}</option>--%>
-<%--                            <option value="ByName(a-z)">ByName(a-z)</option>--%>
-<%--                            <option value="ByPrice">ByPrice</option>--%>
-<%--                        </c:when>--%>
-<%--                        <c:when test="${sort.equals(ByPrice)}">--%>
-<%--                            <option selected value="${sort}">${sort}</option>--%>
-<%--                            <option value="ByName(z-a)">ByName(z-a)</option>--%>
-<%--                            <option value="ByName(a-z)">ByName(a-z)</option>--%>
-<%--                        </c:when>--%>
-<%--                        <c:otherwise>--%>
+                    </c:forEach>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <select name="sort" class="custom-select">
+                    <c:choose>
+                        <c:when test="${sort.equals(ByNameASC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByNameDESC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByPriceASC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(desc)">By Price(desc)</option>
+                        </c:when>
+                        <c:when test="${sort.equals(ByPriceDESC)}">
+                            <option selected value="${sort}">${sort}</option>
+                            <option value="By Name(z-a)">By Name(z-a)</option>
+                            <option value="By Name(a-z)">By Name(a-z)</option>
+                            <option value="By Price(asc)">By Price(asc)</option>
+                        </c:when>
+                        <c:otherwise>
 
-<%--                        </c:otherwise>--%>
-<%--                    </c:choose>--%>
+                        </c:otherwise>
+                    </c:choose>
 
-<%--                </select>--%>
-
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-info col-4">Show Tariffs</button>
             </div>
         </div>
-<%--        <div class="row">--%>
-<%--            <div class="col-sm-12">--%>
-<%--                <button type="submit" class="btn btn-primary" style="width: 100%;">Show Tariffs</button>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </form>--%>
-    <br>
+    </form>
+    <hr>
     <table class="table table-striped" id="tariffsTable">
         <thead>
         <tr>
@@ -100,6 +107,5 @@
         </tbody>
     </table>
 </div>
-
 </body>
 </html>
