@@ -32,7 +32,11 @@
                            class="form-control"
                            placeholder="<fmt:message key="enter.user.password"/>"/>
                 </div>
-                <small style="color:red">${message}</small>
+                <c:if test="${not empty message}">
+                    <div class="alert alert-danger">
+                        <c:out value="${message}"/>
+                    </div>
+                </c:if>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3">

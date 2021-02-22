@@ -1,8 +1,9 @@
 package com.provider.controller;
 
-import com.provider.controller.command.Exception;
+import com.provider.controller.command.ExceptionCommand;
 import com.provider.controller.command.*;
 import com.provider.controller.command.admin.*;
+import com.provider.controller.command.user.*;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -18,18 +19,25 @@ public class Servlet extends HttpServlet {
     public void init(ServletConfig servletConfig) {
         commands.put("", new MainPageCommand());
         commands.put("index", new MainPageCommand());
-        commands.put("login", new Login());
-        commands.put("logout", new Logout());
-        commands.put("registration", new Registration());
-        commands.put("exception", new Exception());
+        commands.put("login", new LoginCommand());
+        commands.put("logout", new LogoutCommand());
+        commands.put("exception", new ExceptionCommand());
 
         commands.put("admin/", new AdminMainCommand());
         commands.put("admin/admin_index", new AdminMainCommand());
-        commands.put("admin/user_management", new AdminMainCommand());
+        commands.put("admin/user_management", new UserManagementCommand());
+        commands.put("admin/registration", new RegistrationCommand());
+        commands.put("admin/user_delete", new DeleteUserCommand());
         commands.put("admin/tariff_add", new CreateNewTariffCommand());
         commands.put("admin/tariff_delete", new DeleteTariffCommand());
         commands.put("admin/tariff_edit", new EditTariffCommand());
         commands.put("admin/service_add", new CreateNewServiceCommand());
+
+        commands.put("user/user_index", new UserMainCommand());
+        commands.put("user/subscribe", new SubscribeTariffCommand());
+        commands.put("user/account", new AccountCommand());
+        commands.put("user/account_replenishment", new AccountReplenishmentCommand());
+        commands.put("user/unsubscribe", new UnsubscribeCommand());
     }
 
 
@@ -54,7 +62,7 @@ public class Servlet extends HttpServlet {
             } else {
                 request.getRequestDispatcher(page).forward(request, response);
             }
-        } catch (java.lang.Exception | Exception exception) {
+        } catch (java.lang.Exception | ExceptionCommand exception) {
             exception.printStackTrace();
         }
     }

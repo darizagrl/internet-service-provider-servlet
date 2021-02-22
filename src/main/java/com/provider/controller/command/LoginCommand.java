@@ -7,14 +7,13 @@ import com.provider.model.entity.User;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-public class Login implements Command {
+public class LoginCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) throws java.lang.Exception {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         if (email == null || email.equals("") || password == null || password.equals("")) {
-            request.setAttribute("message", "You have empty fields.");
             return "/login.jsp";
         }
         DaoFactory factory = DaoFactory.getInstance();
@@ -30,7 +29,7 @@ public class Login implements Command {
                 } else {
                     CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
-                    return "redirect:/index";
+                    return "redirect:/user/user_index";
                 }
             }
         }

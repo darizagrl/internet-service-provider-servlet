@@ -15,11 +15,11 @@
     <meta charset="utf-8">
 </head>
 <body>
-<jsp:include page="header.jsp"/>
+<jsp:include page="../header.jsp"/>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <form method="post" action="${pageContext.request.contextPath}/registration" accept-charset="utf-8">
+            <form method="post" action="${pageContext.request.contextPath}/admin/registration" accept-charset="utf-8">
                 <h2 class="text-center"><fmt:message key="registration.page"/></h2>
                 <div class="form-group">
                     <label for="firstname" class="control-label"><fmt:message key="user.firstname"/></label>
@@ -52,7 +52,11 @@
                     <input id="confirmPassword" type="password" class="form-control"
                            placeholder="<fmt:message key="user.confirm.password"/>" name="confirmPassword">
                 </div>
-                <small style="color:red">${message}</small>
+                <c:if test="${not empty message}">
+                    <div class="alert alert-danger">
+                        <c:out value="${message}"/>
+                    </div>
+                </c:if>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success"><fmt:message key="register"/></button>
                 </div>

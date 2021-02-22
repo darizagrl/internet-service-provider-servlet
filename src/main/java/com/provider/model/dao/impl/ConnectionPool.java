@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.sql.*;
 
 public class ConnectionPool {
+    //TODO Connection pool and properties file with credentials
         private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
 
     private ConnectionPool() {
@@ -33,9 +34,7 @@ public class ConnectionPool {
             context = new InitialContext();
             DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/provider-servlet");
             c = ds.getConnection();
-        } catch (NamingException e) {
-            logger.error(e.getMessage());
-        } catch (SQLException e) {
+        } catch (NamingException | SQLException e) {
             logger.error(e.getMessage());
         }
         return c;

@@ -14,67 +14,43 @@
 </head>
 <body>
 <jsp:include page="admin_header.jsp"/>
-<div class="container my-2">
-    <h1><fmt:message key="users.list"/></h1>
-    <a href="${pageContext.request.contextPath}/registration" class="btn btn-primary btn-sm mb-3">
-        <fmt:message key="user.add"/></a>
-
-    <table boarder="1" class="table table-striped table-responsive-md">
+<div class="container pt-3">
+    <h2><fmt:message key="users.list"/></h2>
+    <div class="btn-group">
+        <a href="${pageContext.request.contextPath}/admin/registration" class="btn btn-success" role="button">Create
+            User</a>
+        <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-primary" role="button">Users</a>
+        <a href="${pageContext.request.contextPath}/admin/admins" class="btn btn-primary"
+           role="button">Administrators</a>
+    </div>
+    <br><br>
+    <table class="table table-striped" id="usersTable">
         <thead>
         <tr>
-            <th>
-                <a th:href="@{'/page/' + ${currentPage} + '?sortField=firstname&sortOrder=' + ${reverseSortOrder}}"
-                   th:text="#{user.firstname}"></a>
-            </th>
-            <th>
-                <a th:href="@{'/page/' + ${currentPage} + '?sortField=lastname&sortOrder=' + ${reverseSortOrder}}"
-                   th:text="#{user.lastname}"></a>
-            </th>
-            <th>
-                <a th:href="@{'/page/' + ${currentPage} + '?sortField=email&sortOrder=' + ${reverseSortOrder}}"
-                   th:text="#{user.email}"></a>
-            </th>
-            <th th:text="#{user.actions}"></th>
-        </tr>
+            <th><fmt:message key="user.firstname"/></th>
+            <th><fmt:message key="user.lastname"/></th>
+            <th><fmt:message key="user.email"/></th>
+            <th><fmt:message key="user.actions"/></th>
+            <th></th>
         </thead>
         <tbody>
-        <tr th:each="user : ${listUsers}">
-            <td th:text="${user.firstname}"></td>
-            <td th:text="${user.lastname}"></td>
-            <td th:text="${user.email}"></td>
-            <td>
-                <a th:href="@{/deleteUser/{id}(id=${user.id})}" class="btn btn-danger" th:text="#{user.delete}"></a>
-            </td>
-        </tr>
+        <c:forEach var="user" items="${userList}">
+            <tr class="clickable-row">
+                <td>${user.getFirstname()}</td>
+                <td>${user.getLastname()}</td>
+                <td>${user.getEmail()}</td>
+                <td>
+                    <form method="post" action='<c:url value="/admin/user_delete" />' style="display:inline;">
+                        <input type="hidden" name="userId" value="${user.getId()}">
+                        <input type="submit" class="btn btn-danger" value="<fmt:message key="user.delete"/>">
+                    </form>
+                </td>
+
+            </tr>
+        </c:forEach>
         </tbody>
     </table>
-    <div th:if="${totalPages > 1}">
-        <div class="row col-sm-10">
-            <div class="col-sm-2" th:text="#{page.rows}">
-                : [[${totalItems}]]
-            </div>
-            <div class="col-sm-1">
-                    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-      <a th:if="${currentPage != i}"
-         th:href="@{'/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}">[[${i}]]</a>
-      <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp; &nbsp;
-                    </span>
-            </div>
-            <div class="col-sm-1">
-                <a th:if="${currentPage < totalPages}"
-                   th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}"
-                   th:text="#{page.next}"></a>
-                <span th:unless="${currentPage < totalPages}" th:text="#{page.next}"></span>
-            </div>
 
-            <div class="col-sm-1">
-                <a th:if="${currentPage < totalPages}"
-                   th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortOrder=' + ${sortOrder}}"
-                   th:text="#{page.last}"></a>
-                <span th:unless="${currentPage < totalPages}" th:text="#{page.last}"></span>
-            </div>
-        </div>
-    </div>
 </div>
 </body>
 </html>

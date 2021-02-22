@@ -19,13 +19,11 @@ public class JDBCUserDao implements UserDao {
     public static final String INSERT_USER_ROLE = "insert into users_roles (user_id, role_id) values (?,?)";
     public static final String FIND_USER = "SELECT * FROM public.users WHERE users.id = ?";
     public static final String FIND_ALL_USERS_AND_ROLES = "select usr.*, rl.* FROM public.users usr join public.users_roles ur on usr.id=ur.user_id join public.role rl on rl.id=ur.role_id;";
-    public static final String FIND_ALL_USERS = "SELECT * FROM public.users ORDER BY users.id;";
     public static final String UPDATE_USER = "UPDATE users SET firstname=?,lastname=?, email=?,password=?, isblocked=?,balance=? WHERE users.id=?;";
     public static final String DELETE_USER = "DELETE FROM users WHERE users.id = ?;";
-    public static final String FIND_USER_TARIFFS = "SELECT * FROM users_tariffs INNER JOIN tariff ON users_tariffs.tariff_id = tariff.id=tarifF.id\r\n" +
-            " inner join service on tariff.service_id= service.id where user_id = ?;";
-    public static final String INSERT_USER_TARIFF = "INSERT INTO users_tariffs(user_id, tariff_id) VALUES (?,?);";
-    public static final String REMOVE_USER_TARIFF = "DELETE FROM users_tariffs where user_id = ? AND tariff_id=?;";
+    public static final String FIND_USER_TARIFFS = "SELECT * FROM users_tariffs INNER JOIN tariff ON users_tariffs.tariff_id = tariff.id inner join service on tariff.service_id= service.id where user_id = ?;";
+    public static final String SUBSCRIBE_TARIFF = "INSERT INTO users_tariffs(user_id, tariff_id) VALUES (?,?);";
+    public static final String UNSUBSCRIBE_TARIFF = "DELETE FROM users_tariffs where user_id = ? AND tariff_id=?;";
 
     public JDBCUserDao(Connection connection) {
         this.connection = connection;
@@ -173,8 +171,8 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public void insertUserTariffs(int userId, int tariffId) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_TARIFF, Statement.RETURN_GENERATED_KEYS)) {
+    public void subscribeTariff(int userId, int tariffId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SUBSCRIBE_TARIFF, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tariffId);
             preparedStatement.executeUpdate();
@@ -184,8 +182,8 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public void removeUserTariffs(int userId, int tariffId) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_USER_TARIFF)) {
+    public void unsubscribeTariff(int userId, int tariffId) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(UNSUBSCRIBE_TARIFF)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, tariffId);
             preparedStatement.executeUpdate();

@@ -12,10 +12,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href=" https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css"
           integrity="sha512-Cv93isQdFwaKBV+Z4X8kaVBYWHST58Xb/jVOcV9aRsGSArZsgAnFIhMpDoMDcFNoUtday1hdjn0nGp3+KZyyFw=="
           crossorigin="anonymous"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -24,17 +26,18 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="${pageContext.request.contextPath}/admin/admin_index"><i
-                    class="fa fa-home"></i></a>
+            <a class="navbar-brand" href="${pageContext.request.contextPath}/user/user_index"><i class="fa fa-home"></i></a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
-                                                                          aria-hidden="true"></i></a>
-            <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"
-                                                                            aria-hidden="true"></i></a>
+            <li>
+                <a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
+                                                                      aria-hidden="true"></i></a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/admin/user_management">
-                <i class="fa fa-users" aria-hidden="true"></i></a>
+            <li><a href="${pageContext.request.contextPath}/logout}"><i class="fa fa-sign-out"
+                                                                        aria-hidden="true"></i></a>
+            </li>
+            <li><a href="${pageContext.request.contextPath}/user/account}"><i
+                    class="glyphicon glyphicon-user"></i></a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
