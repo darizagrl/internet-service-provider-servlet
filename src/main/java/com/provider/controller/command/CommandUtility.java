@@ -27,8 +27,6 @@ public class CommandUtility {
         String email = (String) context.getAttribute("email");
         HashSet<String> loggedUsers = (HashSet<String>) context.getAttribute("loggedUsers");
         loggedUsers.remove(email);
-        //for debug
-        System.out.println(email);
         context.setAttribute("loggedUsers", loggedUsers);
     }
 

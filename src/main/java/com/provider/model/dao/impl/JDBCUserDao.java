@@ -84,6 +84,7 @@ public class JDBCUserDao implements UserDao {
         }
         return user;
     }
+
     @Override
     public User findByEmail(String email) {
         User user = null;
@@ -212,6 +213,7 @@ public class JDBCUserDao implements UserDao {
             logger.error(e.getMessage());
         }
     }
+
     @Override
     public void close() {
         try {

@@ -6,19 +6,13 @@ import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CreateNewTariffCommand implements Command {
-    private final Logger logger = LogManager.getLogger(CreateNewTariffCommand.class);
-
     @Override
     public String execute(HttpServletRequest request) throws Exception {
-        try {
             DaoFactory factory = DaoFactory.getInstance();
             ServiceDao serviceDao = factory.getServiceDao();
             List<Service> serviceList = serviceDao.findAll();
@@ -71,12 +65,5 @@ public class CreateNewTariffCommand implements Command {
             tariff.setService(service);
             dao.create(tariff);
             return "/admin/admin_index";
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-            throw new SQLException();
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new ClassNotFoundException();
-        }
     }
 }

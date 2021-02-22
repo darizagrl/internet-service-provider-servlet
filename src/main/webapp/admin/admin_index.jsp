@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="col-md-3">
-                <select name="serviceId" class="custom-select md-5">
+                <select name="serviceId" class="form-control">
 
                     <c:forEach var="service" items="${serviceList}">
                         <c:choose>
@@ -54,7 +54,7 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <select name="sort" class="custom-select">
+                <select name="sort" class="form-control">
                     <c:choose>
                         <c:when test="${sort.equals(ByNameASC)}">
                             <option selected value="${sort}">${sort}</option>
