@@ -18,6 +18,7 @@ public class JDBCUserDao implements UserDao {
     public static final String CREATE_USER = "insert into users (firstname, lastname, email, password) values (?,?,?,?)";
     public static final String INSERT_USER_ROLE = "insert into users_roles (user_id, role_id) values (?,?)";
     public static final String FIND_USER = "SELECT * FROM public.users WHERE users.id = ?";
+    public static final String FIND_USER_BY_EMAIL = "SELECT * FROM public.users WHERE users.email = ?";
     public static final String FIND_ALL_USERS_AND_ROLES = "select usr.*, rl.* FROM public.users usr join public.users_roles ur on usr.id=ur.user_id join public.role rl on rl.id=ur.role_id;";
     public static final String UPDATE_USER = "UPDATE users SET firstname=?,lastname=?, email=?,password=?, isblocked=?,balance=? WHERE users.id=?;";
     public static final String DELETE_USER = "DELETE FROM users WHERE users.id = ?;";
@@ -83,6 +84,30 @@ public class JDBCUserDao implements UserDao {
         }
         return user;
     }
+    @Override
+    public User findByEmail(String email) {
+        User user = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL)) {
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt(1);
+                String firstname = resultSet.getString(2);
+                String lastname = resultSet.getString(3);
+                String userEmail = resultSet.getString(4);
+                String password = resultSet.getString(5);
+                boolean isBlocked = resultSet.getBoolean(6);
+                double balance = resultSet.getDouble(7);
+                user = new User(firstname, lastname, userEmail, password);
+                user.setId(id);
+                user.setBalance(balance);
+                user.setBlocked(isBlocked);
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        return user;
+    }
 
     @Override
     public List<User> findAll() {
@@ -140,10 +165,6 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public void close() {
-    }
-
-    @Override
     public User findUserTariffs(User user) {
         List<Tariff> list = new ArrayList<>();
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_TARIFFS)) {
@@ -189,6 +210,14 @@ public class JDBCUserDao implements UserDao {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage());
+        }
+    }
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            logger.warn("Cannot close the connection");
         }
     }
 }

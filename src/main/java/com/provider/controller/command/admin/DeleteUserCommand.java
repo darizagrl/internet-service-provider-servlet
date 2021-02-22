@@ -1,7 +1,6 @@
 package com.provider.controller.command.admin;
 
 import com.provider.controller.command.Command;
-import com.provider.controller.command.ExceptionCommand;
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
@@ -14,6 +13,7 @@ import java.util.List;
 
 public class DeleteUserCommand implements Command {
     private final Logger logger = LogManager.getLogger(DeleteUserCommand.class);
+
     @Override
     public String execute(HttpServletRequest request) throws Exception {
         try {

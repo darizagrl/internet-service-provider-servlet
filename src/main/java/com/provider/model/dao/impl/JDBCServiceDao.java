@@ -101,10 +101,6 @@ public class JDBCServiceDao implements ServiceDao {
     }
 
     @Override
-    public void close() {
-    }
-
-    @Override
     public Service findByName(String name) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_SERVICE_BY_NAME)) {
             preparedStatement.setString(1, name);
@@ -121,5 +117,13 @@ public class JDBCServiceDao implements ServiceDao {
             logger.error(e.getMessage());
         }
         return null;
+    }
+    @Override
+    public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            logger.warn("Cannot close the connection");
+        }
     }
 }

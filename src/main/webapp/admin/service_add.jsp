@@ -22,11 +22,17 @@
     <form method="post" action="${pageContext.request.contextPath}/admin/service_add">
         <h2 class="text-center">Create service</h2>
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Enter name" name="name">
+            <input type="text" class="form-control" placeholder="<fmt:message key="service.type"/>" name="name">
         </div>
-        <small style="color:red">${message}</small>
+
+        <c:if test="${not empty message}">
+            <div class="alert alert-danger">
+                <c:out value="${message}"/>
+            </div>
+        </c:if>
+
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            <button type="submit" class="btn btn-info col-4"><fmt:message key="service.add"/></button>
         </div>
     </form>
 

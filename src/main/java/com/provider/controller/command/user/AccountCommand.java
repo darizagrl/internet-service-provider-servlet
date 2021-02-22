@@ -21,7 +21,7 @@ public class AccountCommand implements Command {
             User user = (User) request.getSession().getAttribute("user");
             user = daoUser.findUserTariffs(user);
             request.getSession().setAttribute("user", user);
-            return "user/admin_account.jsp";
+            return "/user/account.jsp";
         } catch (SQLException e) {
             logger.error(e.getMessage());
             throw new SQLException();

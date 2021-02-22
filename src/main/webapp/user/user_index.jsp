@@ -23,7 +23,7 @@
     <form action="${pageContext.request.contextPath}/user/user_index">
         <div class="row">
             <div class="col-sm-4">
-                <h4>Service:</h4>
+                <h4><fmt:message key="service"/></h4>
             </div>
             <div class="col-sm-4">
                 <h4>Sort:</h4>

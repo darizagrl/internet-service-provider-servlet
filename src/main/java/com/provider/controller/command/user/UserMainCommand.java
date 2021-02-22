@@ -1,7 +1,6 @@
 package com.provider.controller.command.user;
 
 import com.provider.controller.command.Command;
-import com.provider.controller.command.MainPageCommand;
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;

@@ -47,7 +47,6 @@ public class CreateNewTariffCommand implements Command {
             String description = request.getParameter("description");
 
             if (name == null || name.equals("") || description == null || description.equals("")) {
-                request.setAttribute("message", "You have empty fields.");
                 return "/admin/tariff_add.jsp";
             }
             if (price < 0 || price > 10000) {

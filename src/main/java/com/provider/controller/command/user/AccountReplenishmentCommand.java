@@ -25,7 +25,7 @@ public class AccountReplenishmentCommand implements Command {
                     balance = currentUser.getBalance();
                     request.setAttribute("balance", balance);
                     request.setAttribute("message", "Enter the amount of money to replenish");
-                    return "/user/admin_account.jsp";
+                    return "/user/account.jsp";
                 } else {
                     balance = Double.parseDouble(request.getParameter("balance"));
                 }
@@ -33,18 +33,18 @@ public class AccountReplenishmentCommand implements Command {
                 logger.error(e.getMessage());
                 request.setAttribute("balance", 0.0);
                 request.setAttribute("message", "Wrong number format");
-                return "/user/admin_account.jsp";
+                return "/user/account.jsp";
             }
             if (currentUser.isBlocked() && currentUser.getBalance() >= 0) {
                 currentUser.setBlocked(false);
             }
             if (balance < 0) {
                 request.setAttribute("message", "The number cannot be less than 0");
-                return "/user/admin_account.jsp";
+                return "/user/account.jsp";
             }
             if (balance > 3000) {
                 request.setAttribute("message", "You could only replenish your balance on 3000 in one transaction");
-                return "/user/admin_account.jsp";
+                return "/user/account.jsp";
             }
             currentUser.setBalance(currentUser.getBalance() + balance);
             dao.update(currentUser);

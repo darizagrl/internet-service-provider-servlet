@@ -20,20 +20,16 @@
 <jsp:include page="admin_header.jsp"/>
 <div class="container pt-3">
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1>
-    <div>
-        <span>
-            <a type="submit" class="btn btn-info col-4" href="${pageContext.request.contextPath}/admin/tariff_add">
-                <fmt:message key="tariff.add"/></a>
-        </span>
-    </div>
     <div class="btn-group">
-        <a href="${pageContext.request.contextPath}/admin/service_add" class="btn btn-success" role="button">Create
-            Service</a>
+        <a type="submit" class="btn btn-info col-4" href="${pageContext.request.contextPath}/admin/tariff_add">
+            <fmt:message key="tariff.add"/></a>
+        <a href="${pageContext.request.contextPath}/admin/service_add" class="btn btn-success"
+           role="button"><fmt:message key="service.add"/></a>
     </div>
     <form action="${pageContext.request.contextPath}/admin/">
         <div class="row">
             <div class="col-md-3">
-                <h4>Service:</h4>
+                <h4><fmt:message key="service"/></h4>
             </div>
             <div class="col-md-3">
                 <h4>Sort:</h4>
@@ -101,9 +97,9 @@
         <table class="table table-striped" id="tariffsTable">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
+                <th><fmt:message key="tariff.name"/></th>
+                <th><fmt:message key="tariff.description"/></th>
+                <th><fmt:message key="tariff.price"/></th>
             </thead>
             <tbody>
             <c:forEach var="tariff" items="${tariffList}">
@@ -118,49 +114,47 @@
                         </form>
                     </td>
                     <td>
-                            <button type="button" class="btn btn-danger" data-toggle="modal"
-                                    data-target="#exampleModalCenter">
-                                <fmt:message key="user.delete"/>
-                            </button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                data-target="#exampleModalCenter">
+                            <fmt:message key="user.delete"/>
+                        </button>
 
-                            <!-- Modal -->
-                            <form method="post" action='<c:url value="/admin/tariff_delete" />' style="display:inline;">
-                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">
-                                                    <fmt:message key="user.delete"/></h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
+                        <!-- Modal -->
+                        <form method="post" action='<c:url value="/admin/tariff_delete" />' style="display:inline;">
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">
+                                                <fmt:message key="user.delete"/></h5>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <h3>
+                                                    Are you sure?
+                                                </h3>
                                             </div>
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <h5>
-                                                        Are you sure?
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                                                    <fmt:message key="close"/>
-                                                </button>
-                                                <form method="post" action='<c:url value="/admin/tariff_delete" />'
-                                                      style="display:inline;">
-                                                    <input type="hidden" name="tariffId" value="${tariff.getId()}">
-                                                    <input type="submit" class="btn btn-danger"
-                                                           value="<fmt:message key="user.delete"/>">
-                                                </form>
-                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <fmt:message key="close"/>
+                                            </button>
+                                            <form method="post" action='<c:url value="/admin/tariff_delete" />'
+                                                  style="display:inline;">
+                                                <input type="hidden" name="tariffId" value="${tariff.getId()}">
+                                                <input type="submit" class="btn btn-danger"
+                                                       value="<fmt:message key="user.delete"/>">
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-
+                            </div>
+                        </form>
                     </td>
                 </tr>
             </c:forEach>

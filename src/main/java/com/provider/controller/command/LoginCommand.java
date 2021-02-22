@@ -26,7 +26,7 @@ public class LoginCommand implements Command {
                     CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
                     return "redirect:/admin/admin_index";
-                } else {
+                } else if (user.getRole().getId().equals(2)) {
                     CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
                     return "redirect:/user/user_index";

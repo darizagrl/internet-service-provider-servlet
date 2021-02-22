@@ -31,10 +31,7 @@
         <ul class="nav navbar-nav">
             <li>
                 <a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
-                                                                          aria-hidden="true"></i></a>
-            </li>
-            <li><a href="${pageContext.request.contextPath}/logout}"><i class="fa fa-sign-out"
-                                                                            aria-hidden="true"></i></a>
+                                                                      aria-hidden="true"></i></a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">

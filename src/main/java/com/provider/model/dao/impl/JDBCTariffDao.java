@@ -257,5 +257,10 @@ public class JDBCTariffDao implements TariffDao {
 
     @Override
     public void close() {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            logger.warn("Cannot close the connection");
+        }
     }
 }

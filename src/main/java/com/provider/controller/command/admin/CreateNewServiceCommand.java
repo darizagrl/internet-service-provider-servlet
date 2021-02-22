@@ -19,12 +19,6 @@ public class CreateNewServiceCommand implements Command {
         try {
             String name = request.getParameter("name");
             if (name == null || name.equals("")) {
-                request.setAttribute("message", "You have empty fields.");
-                return "/admin/service_add.jsp";
-            }
-            if (name.length() < 4 || name.length() > 12) {
-                request.setAttribute("message", "Minimum length of login and password = 4.\n"
-                        + "Maximum length of login and password = 12");
                 return "/admin/service_add.jsp";
             }
             DaoFactory factory = DaoFactory.getInstance();
@@ -32,7 +26,7 @@ public class CreateNewServiceCommand implements Command {
             List<Service> list = dao.findAll();
             for (Service service : list) {
                 if (name.equals(service.getName())) {
-                    request.setAttribute("message", "This name already exist.");
+                    request.setAttribute("message", "The service with this name already exist.");
                     return "/admin/service_add.jsp";
                 }
             }

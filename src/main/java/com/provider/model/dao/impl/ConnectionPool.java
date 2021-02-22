@@ -1,23 +1,31 @@
 package com.provider.model.dao.impl;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class ConnectionPool {
-    //TODO Connection pool and properties file with credentials
-        private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
+    private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
+    private final DataSource dataSource;
+    private static ConnectionPool instance = null;
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("db");
+
 
     private ConnectionPool() {
         logger.info("Creating connection pool...");
-    }
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(resourceBundle.getString("db.url"));
+        basicDataSource.setUsername(resourceBundle.getString("db.user"));
+        basicDataSource.setPassword(resourceBundle.getString("db.password"));
+        basicDataSource.setDriverClassName(resourceBundle.getString("db.driver"));
 
-    private static ConnectionPool instance = null;
+        dataSource = basicDataSource;
+    }
 
     public static ConnectionPool getInstance() {
         if (instance == null) {
@@ -28,15 +36,11 @@ public class ConnectionPool {
     }
 
     public Connection getConnection() {
-        Context context;
-        Connection c = null;
         try {
-            context = new InitialContext();
-            DataSource ds = (DataSource) context.lookup("java:comp/env/jdbc/provider-servlet");
-            c = ds.getConnection();
-        } catch (NamingException | SQLException e) {
-            logger.error(e.getMessage());
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return c;
+        return null;
     }
 }

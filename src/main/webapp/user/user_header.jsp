@@ -33,10 +33,10 @@
                 <a href="${pageContext.request.contextPath}/login"><i class="fa fa-sign-in"
                                                                       aria-hidden="true"></i></a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/logout}"><i class="fa fa-sign-out"
+            <li><a href="${pageContext.request.contextPath}/logout"><i class="fa fa-sign-out"
                                                                         aria-hidden="true"></i></a>
             </li>
-            <li><a href="${pageContext.request.contextPath}/user/account}"><i
+            <li><a href="${pageContext.request.contextPath}/user/account"><i
                     class="glyphicon glyphicon-user"></i></a>
             </li>
         </ul>

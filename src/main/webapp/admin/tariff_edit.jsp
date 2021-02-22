@@ -47,7 +47,11 @@
                 </c:forEach>
             </select>
         </div>
-        <small style="color:red">${message}</small>
+        <c:if test="${not empty message}">
+            <div class="alert alert-danger">
+                <c:out value="${message}"/>
+            </div>
+        </c:if>
         <div class="form-group">
             <input type="hidden" name="tariffId" value="${tariff.getId()}">
             <button type="submit" class="btn btn-info col-4"><fmt:message key="save"/></button>
