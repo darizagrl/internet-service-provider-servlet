@@ -6,12 +6,13 @@ import com.provider.model.dao.ServiceDao;
 import com.provider.model.entity.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 
 public class CreateNewServiceCommand implements Command {
     @Override
-    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
         String name = request.getParameter("name");
         if (name == null || name.equals("")) {
             return "/admin/service_add.jsp";

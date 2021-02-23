@@ -86,31 +86,6 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public User findByEmail(String email) {
-        User user = null;
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_BY_EMAIL)) {
-            preparedStatement.setString(1, email);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String firstname = resultSet.getString(2);
-                String lastname = resultSet.getString(3);
-                String userEmail = resultSet.getString(4);
-                String password = resultSet.getString(5);
-                boolean isBlocked = resultSet.getBoolean(6);
-                double balance = resultSet.getDouble(7);
-                user = new User(firstname, lastname, userEmail, password);
-                user.setId(id);
-                user.setBalance(balance);
-                user.setBlocked(isBlocked);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        return user;
-    }
-
-    @Override
     public List<User> findAll() {
         List<User> list = new ArrayList<>();
         try (Statement statement = connection.createStatement()) {

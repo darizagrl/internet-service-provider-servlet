@@ -6,11 +6,12 @@ import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class DeleteUserCommand implements Command {
     @Override
-    public String execute(HttpServletRequest request) throws Exception {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         DaoFactory factory = DaoFactory.getInstance();
         UserDao dao = factory.getUserDao();
         int id = Integer.parseInt(request.getParameter("userId"));

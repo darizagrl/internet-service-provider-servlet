@@ -6,12 +6,12 @@ import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
 public class AccountCommand implements Command {
     @Override
-    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
-
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
         DaoFactory factory = DaoFactory.getInstance();
         UserDao daoUser = factory.getUserDao();
         User user = (User) request.getSession().getAttribute("user");

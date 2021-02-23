@@ -3,22 +3,27 @@ package com.provider.controller.command;
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 
 public class RegistrationCommand implements Command {
+    private static final Logger logger = LogManager.getLogger(RegistrationCommand.class);
+
     @Override
-    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String email = request.getParameter("email");
         String confirmEmail = request.getParameter("confirmEmail");
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
-        System.out.println("user email:" + email);
-        System.out.println("user password:" + password);
+        logger.info("User email:" + email);
+        logger.info("User password:" + password);
         if (email == null || email.equals("") || password == null || password.equals("") ||
                 confirmPassword == null || confirmPassword.equals("")) {
             request.setAttribute("message", "You have empty fields.");

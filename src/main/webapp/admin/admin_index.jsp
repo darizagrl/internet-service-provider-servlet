@@ -19,6 +19,9 @@
 <body>
 <jsp:include page="admin_header.jsp"/>
 <div class="container pt-3">
+    <a href="admin_index/export/pdf" class="btn btn-info col-4"><fmt:message key="tariff.export"/></a>
+</div>
+<div class="container pt-3">
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1>
     <div class="btn-group">
         <a type="submit" class="btn btn-info col-4" href="${pageContext.request.contextPath}/admin/tariff_add">

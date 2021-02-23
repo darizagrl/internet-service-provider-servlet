@@ -1,5 +1,7 @@
 package com.provider.model.entity;
 
+import java.util.Objects;
+
 public class Role {
     private Integer id;
     private String name;

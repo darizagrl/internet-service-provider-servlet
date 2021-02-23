@@ -18,6 +18,12 @@
 </head>
 <body>
 <jsp:include page="header.jsp"/>
+<div class="p-5 text-center bg-image"
+     style="'background: url(/images/header.jpg); height: 400px;'">
+</div>
+<div class="container pt-3">
+    <a href="index/export/pdf" class="btn btn-info col-4"><fmt:message key="tariff.export"/></a>
+</div>
 <div class="container pt-3">
     <h1 class="text-center"><fmt:message key="tariff.list"/></h1><br>
     <form action="${pageContext.request.contextPath}/index">

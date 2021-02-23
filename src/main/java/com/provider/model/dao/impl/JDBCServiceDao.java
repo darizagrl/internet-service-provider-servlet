@@ -101,24 +101,6 @@ public class JDBCServiceDao implements ServiceDao {
     }
 
     @Override
-    public Service findByName(String name) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_SERVICE_BY_NAME)) {
-            preparedStatement.setString(1, name);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                int servId = resultSet.getInt(1);
-                String servName = resultSet.getString(2);
-                Service service;
-                service = new Service(servName);
-                service.setId(servId);
-                return service;
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        return null;
-    }
-    @Override
     public void close() {
         try {
             connection.close();

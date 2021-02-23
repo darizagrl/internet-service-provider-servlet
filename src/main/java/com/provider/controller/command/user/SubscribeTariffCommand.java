@@ -8,12 +8,12 @@ import com.provider.model.entity.Tariff;
 import com.provider.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 
 public class SubscribeTariffCommand implements Command {
     @Override
-    public String execute(HttpServletRequest request) throws SQLException, ClassNotFoundException {
-
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
         DaoFactory factory = DaoFactory.getInstance();
         UserDao daoUser = factory.getUserDao();
         TariffDao daoTariff = factory.getTariffDao();

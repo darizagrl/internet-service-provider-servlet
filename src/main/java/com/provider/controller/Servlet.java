@@ -16,11 +16,12 @@ public class Servlet extends HttpServlet {
     private final Map<String, Command> commands = new HashMap<>();
 
     public void init(ServletConfig servletConfig) {
-        commands.put("", new MainPageCommand());
+        commands.put("/", new MainPageCommand());
         commands.put("index", new MainPageCommand());
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("exception", new ExceptionCommand());
+        commands.put("index/export/pdf", new ExportToPDFCommand());
 
         commands.put("admin/", new AdminMainCommand());
         commands.put("admin/admin_index", new AdminMainCommand());
@@ -31,12 +32,14 @@ public class Servlet extends HttpServlet {
         commands.put("admin/tariff_delete", new DeleteTariffCommand());
         commands.put("admin/tariff_edit", new EditTariffCommand());
         commands.put("admin/service_add", new CreateNewServiceCommand());
+        commands.put("admin/admin_index/export/pdf", new ExportToPDFCommand());
 
         commands.put("user/user_index", new UserMainCommand());
         commands.put("user/subscribe", new SubscribeTariffCommand());
         commands.put("user/account", new AccountCommand());
         commands.put("user/account_replenishment", new AccountReplenishmentCommand());
         commands.put("user/unsubscribe", new UnsubscribeCommand());
+        commands.put("user/user_index/export/pdf", new ExportToPDFCommand());
     }
 
 
@@ -54,7 +57,7 @@ public class Servlet extends HttpServlet {
             path = path.replaceAll("/internet_provider/", "");
             Command command = commands.get(path);
             String page;
-            page = command.execute(request);
+            page = command.execute(request, response);
 
             if (page.contains("redirect:")) {
                 response.sendRedirect(page.replace("redirect:", "/internet_provider"));
