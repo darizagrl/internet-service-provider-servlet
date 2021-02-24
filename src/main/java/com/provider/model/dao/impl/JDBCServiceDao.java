@@ -9,13 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.provider.model.Constants.*;
+
 public class JDBCServiceDao implements ServiceDao {
-    public static final String CREATE_SERVICE = "INSERT INTO service(name) VALUES (?)";
-    public static final String FIND_SERVICE_BY_ID = "SELECT * FROM service WHERE id = ?";
-    public static final String FIND_SERVICE_BY_NAME = "SELECT * FROM service WHERE name = ?";
-    public static final String GET_ALL_SERVICE = "SELECT * FROM service ORDER BY id;";
-    public static final String UPDATE_SERV_NAME = "UPDATE service SET name=? WHERE id=?";
-    public static final String DELETE_SERVICE = "DELETE FROM service WHERE id = ?";
+
 
     private final Logger logger = LogManager.getLogger(JDBCServiceDao.class);
     private final Connection connection;

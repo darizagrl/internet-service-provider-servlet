@@ -14,23 +14,9 @@ public class User {
     private Double balance;
     private boolean isBlocked;
 
-    public User(String firstname, String lastname, String email, String password, Role role, Double balance, boolean isBlocked) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.balance = 0.0;
-        this.isBlocked = false;
+    public User() {
     }
 
-    public User(String firstname, String lastname, String email, String password, Role role) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
     public User(String firstname, String lastname, String email, String password) {
         this.firstname = firstname;
         this.lastname = lastname;

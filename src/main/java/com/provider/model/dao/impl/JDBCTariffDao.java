@@ -10,18 +10,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCTariffDao implements TariffDao {
-    public static final String FIND_TARIFFS_BY_SERVICE = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=?;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_ASC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_DESC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name DESC;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_ASC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.price ASC;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_DESC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.price DESC";
-    public static final String CREATE_TARIFF = "INSERT INTO tariff (name, description, price, service_id) VALUES (?,?,?,?)";
-    public static final String FIND_TARIFF = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.id=?;";
-    public static final String FIND_ALL_TARIFFS = "Select * from tariff inner join service on tariff.service_id = service.id;";
-    public static final String UPDATE_TARIFF = "UPDATE tariff SET name=?, description=?, price=?, service_id=? WHERE tariff.id=?;";
-    public static final String DELETE_TARIFF = "DELETE FROM tariff WHERE tariff.id = ?;";
+import static com.provider.model.Constants.*;
 
+public class JDBCTariffDao implements TariffDao {
     private final Logger logger = LogManager.getLogger(JDBCTariffDao.class);
     private final Connection connection;
 

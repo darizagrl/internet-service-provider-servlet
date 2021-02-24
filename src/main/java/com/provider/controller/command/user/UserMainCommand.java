@@ -30,37 +30,43 @@ public class UserMainCommand implements Command {
         request.getSession().setAttribute("user", user);
         List<Service> serviceList = serviceService.findAll();
         int serviceId;
-        String sortBy;
-        if (request.getParameter("serviceId") == null) {
+        String sortOrder;
+        String sortField;
+        List<Tariff> tariffList;
+        if (request.getParameter("service_id") == null) {
             serviceId = serviceList.get(0).getId();
         } else {
-            serviceId = Integer.parseInt(request.getParameter("serviceId"));
+            serviceId = Integer.parseInt(request.getParameter("service_id"));
         }
-        if (request.getParameter("sort") == null) {
-            sortBy = "By Name(a-z)";
+        if (request.getParameter("sort_field") == null) {
+            sortField = "name";
         } else {
-            sortBy = request.getParameter("sort");
+            sortField = request.getParameter("sort_field");
         }
-        List<Tariff> tariffList;
-        switch (sortBy) {
-            case "By Name(a-z)":
+        if (sortField.equalsIgnoreCase("name")) {
+            if (request.getParameter("sort_order") == null || request.getParameter("sort_order").equals("asc")) {
+                sortOrder = "asc";
                 tariffList = tariffService.findByServiceSortedASC(serviceId);
-                break;
-            case "By Name(z-a)":
+            } else {
+                sortOrder = "desc";
                 tariffList = tariffService.findByServiceSortedDESC(serviceId);
-                break;
-            case "By Price(asc)":
+            }
+        } else if (sortField.equalsIgnoreCase("price")) {
+            if (request.getParameter("sort_order") == null || request.getParameter("sort_order").equals("asc")) {
+                sortOrder = "asc";
                 tariffList = tariffService.findByServiceSortedByPriceASC(serviceId);
-                break;
-            case "By Price(desc)":
+            } else {
+                sortOrder = "desc";
                 tariffList = tariffService.findByServiceSortedByPriceDESC(serviceId);
-                break;
-            default:
-                tariffList = tariffService.findAllByServiceId(serviceId);
-                break;
+            }
+        } else {
+            sortOrder = "asc";
+            tariffList = tariffService.findByServiceSortedASC(serviceId);
         }
         Service service = serviceService.findById(serviceId);
-        request.setAttribute("sort", sortBy);
+        request.setAttribute("sort_order", sortOrder);
+        request.setAttribute("reverseSortOrder", sortOrder.equals("asc") ? "desc" : "asc");
+        request.setAttribute("sort_field", sortField);
         request.setAttribute("serviceAttr", service);
         request.setAttribute("tariffList", tariffList);
         request.setAttribute("serviceList", serviceList);
