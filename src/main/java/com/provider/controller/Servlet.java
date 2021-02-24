@@ -3,6 +3,9 @@ package com.provider.controller;
 import com.provider.controller.command.*;
 import com.provider.controller.command.admin.*;
 import com.provider.controller.command.user.*;
+import com.provider.model.service.ServiceService;
+import com.provider.model.service.TariffService;
+import com.provider.model.service.UserService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
@@ -16,30 +19,30 @@ public class Servlet extends HttpServlet {
     private final Map<String, Command> commands = new HashMap<>();
 
     public void init(ServletConfig servletConfig) {
-        commands.put("/", new MainPageCommand());
-        commands.put("index", new MainPageCommand());
-        commands.put("login", new LoginCommand());
+        commands.put("/", new MainPageCommand(new ServiceService(), new TariffService()));
+        commands.put("index", new MainPageCommand(new ServiceService(), new TariffService()));
+        commands.put("login", new LoginCommand(new UserService()));
         commands.put("logout", new LogoutCommand());
         commands.put("exception", new ExceptionCommand());
-        commands.put("index/export/pdf", new ExportToPDFCommand());
+        commands.put("index/export/pdf", new ExportToPDFCommand(new TariffService()));
 
-        commands.put("admin/", new AdminMainCommand());
-        commands.put("admin/admin_index", new AdminMainCommand());
-        commands.put("admin/user_management", new UserManagementCommand());
-        commands.put("admin/registration", new RegistrationCommand());
-        commands.put("admin/user_delete", new DeleteUserCommand());
-        commands.put("admin/tariff_add", new CreateNewTariffCommand());
-        commands.put("admin/tariff_delete", new DeleteTariffCommand());
-        commands.put("admin/tariff_edit", new EditTariffCommand());
-        commands.put("admin/service_add", new CreateNewServiceCommand());
-        commands.put("admin/admin_index/export/pdf", new ExportToPDFCommand());
+        commands.put("admin/", new AdminMainCommand(new ServiceService(), new TariffService()));
+        commands.put("admin/admin_index", new AdminMainCommand(new ServiceService(), new TariffService()));
+        commands.put("admin/user_management", new UserManagementCommand(new UserService()));
+        commands.put("admin/registration", new RegistrationCommand(new UserService()));
+        commands.put("admin/user_delete", new DeleteUserCommand(new UserService()));
+        commands.put("admin/tariff_add", new CreateNewTariffCommand(new ServiceService(), new TariffService()));
+        commands.put("admin/tariff_delete", new DeleteTariffCommand(new TariffService()));
+        commands.put("admin/tariff_edit", new EditTariffCommand(new TariffService(), new ServiceService()));
+        commands.put("admin/service_add", new CreateNewServiceCommand(new ServiceService()));
+        commands.put("admin/admin_index/export/pdf", new ExportToPDFCommand(new TariffService()));
 
-        commands.put("user/user_index", new UserMainCommand());
-        commands.put("user/subscribe", new SubscribeTariffCommand());
-        commands.put("user/account", new AccountCommand());
-        commands.put("user/account_replenishment", new AccountReplenishmentCommand());
-        commands.put("user/unsubscribe", new UnsubscribeCommand());
-        commands.put("user/user_index/export/pdf", new ExportToPDFCommand());
+        commands.put("user/user_index", new UserMainCommand(new UserService(), new TariffService(), new ServiceService()));
+        commands.put("user/subscribe", new SubscribeTariffCommand(new UserService(), new TariffService()));
+        commands.put("user/account", new AccountCommand(new UserService()));
+        commands.put("user/account_replenishment", new AccountReplenishmentCommand(new UserService()));
+        commands.put("user/unsubscribe", new UnsubscribeCommand(new UserService()));
+        commands.put("user/user_index/export/pdf", new ExportToPDFCommand(new TariffService()));
     }
 
 

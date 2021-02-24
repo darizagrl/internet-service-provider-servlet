@@ -1,25 +1,27 @@
 package com.provider.controller.command.admin;
 
 import com.provider.controller.command.Command;
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.ServiceDao;
 import com.provider.model.entity.Service;
+import com.provider.model.service.ServiceService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CreateNewServiceCommand implements Command {
+    ServiceService serviceService;
+
+    public CreateNewServiceCommand(ServiceService serviceService) {
+        this.serviceService = serviceService;
+    }
+
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request, HttpServletResponse response)   {
         String name = request.getParameter("name");
         if (name == null || name.equals("")) {
             return "/admin/service_add.jsp";
         }
-        DaoFactory factory = DaoFactory.getInstance();
-        ServiceDao dao = factory.getServiceDao();
-        List<Service> list = dao.findAll();
+        List<Service> list = serviceService.findAll();
         for (Service service : list) {
             if (name.equals(service.getName())) {
                 request.setAttribute("message", "The service with this name already exist.");
@@ -27,7 +29,7 @@ public class CreateNewServiceCommand implements Command {
             }
         }
         Service service = new Service(name);
-        dao.create(service);
+        serviceService.create(service);
         return "/admin/admin_index";
     }
 }

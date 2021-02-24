@@ -1,18 +1,21 @@
 package com.provider.controller.command.user;
 
 import com.provider.controller.command.Command;
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
+import com.provider.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class AccountReplenishmentCommand implements Command {
+    UserService userService;
+
+    public AccountReplenishmentCommand(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.getUserDao();
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = (User) request.getSession().getAttribute("user");
         double balance;
         try {
@@ -41,7 +44,7 @@ public class AccountReplenishmentCommand implements Command {
             return "/user/account.jsp";
         }
         currentUser.setBalance(currentUser.getBalance() + balance);
-        dao.update(currentUser);
+        userService.update(currentUser);
         return "/user/account";
     }
 }

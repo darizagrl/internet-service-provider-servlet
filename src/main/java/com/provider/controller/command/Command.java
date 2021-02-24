@@ -2,7 +2,8 @@ package com.provider.controller.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public interface Command {
-    String execute(HttpServletRequest request, HttpServletResponse response) throws ExceptionCommand, java.lang.Exception;
+    String execute(HttpServletRequest request, HttpServletResponse response) throws ExceptionCommand, IOException;
 }

@@ -1,26 +1,29 @@
 package com.provider.controller.command.admin;
 
 import com.provider.controller.command.Command;
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.ServiceDao;
-import com.provider.model.dao.TariffDao;
 import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
+import com.provider.model.service.ServiceService;
+import com.provider.model.service.TariffService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
 
 public class EditTariffCommand implements Command {
+    TariffService tariffService;
+    ServiceService serviceService;
+
+    public EditTariffCommand(TariffService tariffService, ServiceService serviceService) {
+        this.tariffService = tariffService;
+        this.serviceService = serviceService;
+    }
+
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
-        DaoFactory factory = DaoFactory.getInstance();
-        TariffDao dao = factory.getTariffDao();
-        ServiceDao serviceDao = factory.getServiceDao();
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         int tariffId = Integer.parseInt(request.getParameter("tariffId"));
-        List<Service> serviceList = serviceDao.findAll();
-        Tariff currentTariff = dao.findById(tariffId);
+        List<Service> serviceList = serviceService.findAll();
+        Tariff currentTariff = tariffService.findById(tariffId);
         String newName = request.getParameter("newName");
         String newDescription = request.getParameter("newDescription");
         int serviceId;
@@ -38,7 +41,6 @@ public class EditTariffCommand implements Command {
             }
 
         } catch (NumberFormatException e) {
-            newPrice = currentTariff.getPrice();
             request.setAttribute("message", "Wrong number format");
             request.setAttribute("tariff", currentTariff);
             request.setAttribute("currentService", currentTariff.getService());
@@ -62,7 +64,7 @@ public class EditTariffCommand implements Command {
                     + "Maximum length = 255");
             return "/admin/tariff_edit.jsp";
         }
-        List<Tariff> list = dao.findAll();
+        List<Tariff> list = tariffService.findAll();
         if (!(newName.equals(currentTariff.getName()))) {
             for (Tariff tariff : list) {
                 if (newName.equals(tariff.getName())) {
@@ -71,12 +73,12 @@ public class EditTariffCommand implements Command {
                 }
             }
         }
-        Service newService = serviceDao.findById(serviceId);
+        Service newService = serviceService.findById(serviceId);
         currentTariff.setName(newName);
         currentTariff.setDescription(newDescription);
         currentTariff.setPrice(newPrice);
         currentTariff.setService(newService);
-        dao.update(currentTariff);
+        tariffService.update(currentTariff);
         return "/admin/admin_index";
     }
 }

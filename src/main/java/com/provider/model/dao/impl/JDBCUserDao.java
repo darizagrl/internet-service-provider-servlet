@@ -18,7 +18,6 @@ public class JDBCUserDao implements UserDao {
     public static final String CREATE_USER = "insert into users (firstname, lastname, email, password) values (?,?,?,?)";
     public static final String INSERT_USER_ROLE = "insert into users_roles (user_id, role_id) values (?,?)";
     public static final String FIND_USER = "SELECT * FROM public.users WHERE users.id = ?";
-    public static final String FIND_USER_BY_EMAIL = "SELECT * FROM public.users WHERE users.email = ?";
     public static final String FIND_ALL_USERS_AND_ROLES = "select usr.*, rl.* FROM public.users usr join public.users_roles ur on usr.id=ur.user_id join public.role rl on rl.id=ur.role_id;";
     public static final String UPDATE_USER = "UPDATE users SET firstname=?,lastname=?, email=?,password=?, isblocked=?,balance=? WHERE users.id=?;";
     public static final String DELETE_USER = "DELETE FROM users WHERE users.id = ?;";
@@ -30,33 +29,35 @@ public class JDBCUserDao implements UserDao {
         this.connection = connection;
     }
 
-    //TODO transaction
     @Override
     public void create(User user) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.executeUpdate();
-            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    user.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new SQLException("User creation has failed, no ID obtained.");
-                }
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                user.setId(generatedKeys.getInt(1));
+            } else {
+                throw new SQLException("User creation has failed, no ID obtained.");
             }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_ROLE)) {
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setInt(2, 2);
+            PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_USER_ROLE);
+            preparedStatement2.setInt(1, user.getId());
+            preparedStatement2.setInt(2, 2);
             Role role = new Role(2, "user");
             user.setRole(role);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+            connection.commit();
+        } catch (Exception e) {
             logger.error(e.getMessage());
+            try {
+                connection.rollback();
+            } catch (SQLException throwables) {
+                logger.error(e.getMessage());
+            }
         }
     }
 

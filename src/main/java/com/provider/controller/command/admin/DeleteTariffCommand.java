@@ -1,20 +1,22 @@
 package com.provider.controller.command.admin;
 
 import com.provider.controller.command.Command;
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.TariffDao;
+import com.provider.model.service.TariffService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 
 public class DeleteTariffCommand implements Command {
+    TariffService tariffService;
+
+    public DeleteTariffCommand(TariffService tariffService) {
+        this.tariffService = tariffService;
+    }
+
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
-        DaoFactory factory = DaoFactory.getInstance();
-        TariffDao dao = factory.getTariffDao();
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("tariffId"));
-        dao.delete(id);
+        tariffService.delete(id);
         return "/admin/admin_index";
     }
 }

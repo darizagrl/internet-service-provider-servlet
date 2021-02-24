@@ -1,21 +1,25 @@
 package com.provider.controller.command;
 
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
+import com.provider.model.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
 
 public class RegistrationCommand implements Command {
+    UserService userService;
+
+    public RegistrationCommand(UserService userService) {
+        this.userService = userService;
+    }
+
     private static final Logger logger = LogManager.getLogger(RegistrationCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String email = request.getParameter("email");
@@ -42,9 +46,7 @@ public class RegistrationCommand implements Command {
                     + "Maximum length of login and password = 20");
             return "/admin/registration.jsp";
         }
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.getUserDao();
-        List<User> userList = dao.findAll();
+        List<User> userList = userService.findAll();
         for (User user : userList) {
             if (email.equals(user.getEmail())) {
                 request.setAttribute("message", "This email already exist.");
@@ -52,7 +54,7 @@ public class RegistrationCommand implements Command {
             }
         }
         User user = new User(firstname, lastname, email, password);
-        dao.create(user);
+        userService.create(user);
         return "redirect:/admin/user_management";
     }
 //TODO password encoder

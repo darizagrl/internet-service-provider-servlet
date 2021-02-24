@@ -1,30 +1,32 @@
 package com.provider.controller.command;
 
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.UserDao;
 import com.provider.model.entity.User;
+import com.provider.model.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 import java.util.List;
 
 public class LoginCommand implements Command {
+    UserService userService;
+
+    public LoginCommand(UserService userService) {
+        this.userService = userService;
+    }
+
     private static final Logger logger = LogManager.getLogger(LoginCommand.class);
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
         if (email == null || email.equals("") || password == null || password.equals("")) {
             return "/login.jsp";
         }
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao dao = factory.getUserDao();
-        List<User> userList = dao.findAll();
+        List<User> userList = userService.findAll();
         logger.info("User email:" + email);
         logger.info("User password:" + password);
         for (User user : userList) {

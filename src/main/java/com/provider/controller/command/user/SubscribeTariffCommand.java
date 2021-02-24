@@ -1,25 +1,28 @@
 package com.provider.controller.command.user;
 
 import com.provider.controller.command.Command;
-import com.provider.model.dao.DaoFactory;
-import com.provider.model.dao.TariffDao;
-import com.provider.model.dao.UserDao;
 import com.provider.model.entity.Tariff;
 import com.provider.model.entity.User;
+import com.provider.model.service.TariffService;
+import com.provider.model.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.SQLException;
 
 public class SubscribeTariffCommand implements Command {
+    UserService userService;
+    TariffService tariffService;
+
+    public SubscribeTariffCommand(UserService userService, TariffService tariffService) {
+        this.userService = userService;
+        this.tariffService = tariffService;
+    }
+
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response) throws SQLException, ClassNotFoundException {
-        DaoFactory factory = DaoFactory.getInstance();
-        UserDao daoUser = factory.getUserDao();
-        TariffDao daoTariff = factory.getTariffDao();
+    public String execute(HttpServletRequest request, HttpServletResponse response){
         User user = (User) request.getSession().getAttribute("user");
         int tariffId = Integer.parseInt(request.getParameter("tariffId"));
-        Tariff tariff = daoTariff.findById(tariffId);
+        Tariff tariff = tariffService.findById(tariffId);
         if (user.isBlocked()) {
             request.setAttribute("message", "Your account is blocked. Top up your balance if you want to subscribe.");
         } else {
@@ -28,8 +31,8 @@ public class SubscribeTariffCommand implements Command {
                 request.setAttribute("message", "Insufficient funds! The tariff was added to your account. But would be able to use only after replenishment");
             }
             user.setBalance(user.getBalance() - tariff.getPrice());
-            daoUser.subscribeTariff(user.getId(), tariffId);
-            daoUser.update(user);
+            userService.subscribeTariff(user.getId(), tariffId);
+            userService.update(user);
             request.setAttribute("message", "You have successfully subscribed");
         }
         return "/user/user_index";
