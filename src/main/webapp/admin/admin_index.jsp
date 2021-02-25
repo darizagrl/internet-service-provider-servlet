@@ -26,16 +26,12 @@
     </div>
     <form action="${pageContext.request.contextPath}/admin/">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <h4><fmt:message key="service"/></h4>
             </div>
-            <div class="col-md-3">
-                <h4>Sort:</h4>
-            </div>
-
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <select name="service_id" class="form-control">
 
                     <c:forEach var="service" items="${serviceList}">
@@ -51,7 +47,7 @@
                     </c:forEach>
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <button type="submit" class="btn btn-success col-3"><fmt:message key="show"/></button>
             </div>
         </div>
@@ -65,7 +61,9 @@
                     <a href="${pageContext.request.contextPath}/admin/admin_index?service_id=${serviceAttr.getId()}&sort_field=name&sort_order=${reverseSortOrder}"><fmt:message
                             key="tariff.name"/></a></th>
                 <th><fmt:message key="tariff.description"/></th>
-                <th><a href="${pageContext.request.contextPath}/admin/admin_index?service_id=${serviceAttr.getId()}&sort_field=price&sort_order=${reverseSortOrder}"><fmt:message key="tariff.price"/></a></th>
+                <th>
+                    <a href="${pageContext.request.contextPath}/admin/admin_index?service_id=${serviceAttr.getId()}&sort_field=price&sort_order=${reverseSortOrder}"><fmt:message
+                            key="tariff.price"/></a></th>
             </thead>
             <tbody>
             <c:forEach var="tariff" items="${tariffList}">

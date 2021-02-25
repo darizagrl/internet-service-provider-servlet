@@ -24,10 +24,6 @@
             <div class="col-sm-4">
                 <h4><fmt:message key="service"/></h4>
             </div>
-            <div class="col-sm-4">
-                <h4>Sort:</h4>
-            </div>
-
         </div>
         <div class="row">
             <div class="col-sm-4">
@@ -53,7 +49,7 @@
     </form>
     <hr>
     <c:if test="${not empty message}">
-        <div class="alert alert-info">
+        <div class="alert alert-success">
             <c:out value="${message}"/>
         </div>
     </c:if>

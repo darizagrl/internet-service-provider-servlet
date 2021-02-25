@@ -27,10 +27,6 @@
             <div class="col-sm-4">
                 <h4><fmt:message key="service"/></h4>
             </div>
-            <div class="col-sm-4">
-                <h4>Sort:</h4>
-            </div>
-
         </div>
         <div class="row">
             <div class="col-sm-4">
@@ -50,7 +46,7 @@
                 </select>
             </div>
             <div class="col-sm-4">
-                <button type="submit" class="btn btn-info col-4"><fmt:message key="show"/></button>
+                <button type="submit" class="btn btn-success col-4"><fmt:message key="show"/></button>
             </div>
         </div>
     </form>
