@@ -19,7 +19,7 @@ public class SubscribeTariffCommand implements Command {
     }
 
     @Override
-    public String execute(HttpServletRequest request, HttpServletResponse response){
+    public String execute(HttpServletRequest request, HttpServletResponse response) {
         User user = (User) request.getSession().getAttribute("user");
         int tariffId = Integer.parseInt(request.getParameter("tariffId"));
         Tariff tariff = tariffService.findById(tariffId);
@@ -29,11 +29,12 @@ public class SubscribeTariffCommand implements Command {
             if (tariff.getPrice() > (user.getBalance())) {
                 user.setBlocked(true);
                 request.setAttribute("message", "Insufficient funds! The tariff was added to your account. But would be able to use only after replenishment");
+            } else {
+                request.setAttribute("message", "You have successfully subscribed");
             }
             user.setBalance(user.getBalance() - tariff.getPrice());
             userService.subscribeTariff(user.getId(), tariffId);
             userService.update(user);
-            request.setAttribute("message", "You have successfully subscribed");
         }
         return "/user/user_index";
     }

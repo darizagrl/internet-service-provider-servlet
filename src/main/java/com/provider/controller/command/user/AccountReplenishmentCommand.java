@@ -32,7 +32,7 @@ public class AccountReplenishmentCommand implements Command {
             request.setAttribute("message", "Wrong number format");
             return "/user/account.jsp";
         }
-        if (currentUser.isBlocked() && currentUser.getBalance() >= 0) {
+        if (currentUser.isBlocked() && currentUser.getBalance() + balance >= 0) {
             currentUser.setBlocked(false);
         }
         if (balance < 0) {
