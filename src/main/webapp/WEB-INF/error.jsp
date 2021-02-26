@@ -1,18 +1,27 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="ex" uri="/WEB-INF/custom.tld" %>
+
+<%@ page isELIgnored="false" %>
+
+<fmt:setLocale value="${sessionScope.lang}"/>
+<fmt:setBundle basename="messages"/>
 <html>
 <head>
-    <title>404</title>
-    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>404</title>
 </head>
 <body>
 <jsp:include page="/header.jsp"/>
-<h1>404</h1>
-<h2>Such page does not exist</h2>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
-        crossorigin="anonymous"></script>
+<ex:Hello>
+    <div class="container">
+        <h1>Something went wrong!</h1>
+        <h4>Sorry, we couldn't find the page you were looking for</h4>
+        <div>
+            <a href="${pageContext.request.contextPath}/index" class="btn btn-primary btn-sm mb-3"><fmt:message
+                    key="home.page"/></a>
+        </div>
+    </div>
+</ex:Hello>
 </body>
 </html>

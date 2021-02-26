@@ -6,24 +6,32 @@ import com.provider.controller.command.user.*;
 import com.provider.model.service.ServiceService;
 import com.provider.model.service.TariffService;
 import com.provider.model.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class Servlet extends HttpServlet {
+    private static final Logger logger = LogManager.getLogger(Servlet.class);
 
     private final Map<String, Command> commands = new HashMap<>();
 
     public void init(ServletConfig servletConfig) {
+        servletConfig.getServletContext()
+                .setAttribute("loggedUsers", new HashSet<String>());
         commands.put("/", new MainPageCommand(new ServiceService(), new TariffService()));
         commands.put("index", new MainPageCommand(new ServiceService(), new TariffService()));
         commands.put("login", new LoginCommand(new UserService()));
         commands.put("logout", new LogoutCommand());
-        commands.put("exception", new ExceptionCommand());
+        commands.put("error", new ExceptionCommand());
         commands.put("index/export/pdf", new ExportToPDFCommand(new TariffService()));
 
         commands.put("admin/", new AdminMainCommand(new ServiceService(), new TariffService()));
@@ -57,18 +65,19 @@ public class Servlet extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) {
         try {
             String path = request.getRequestURI();
-            path = path.replaceAll("/internet_provider/", "");
-            Command command = commands.get(path);
-            String page;
-            page = command.execute(request, response);
+            path = path.replaceAll(".*/internet_provider/", "");
+            Command command = commands.getOrDefault(path,
+                    (req, res) -> "/WEB-INF/error.jsp");
+//            Command command = commands.get(path);
+            String page = command.execute(request, response);
 
             if (page.contains("redirect:")) {
                 response.sendRedirect(page.replace("redirect:", "/internet_provider"));
             } else {
                 request.getRequestDispatcher(page).forward(request, response);
             }
-        } catch (java.lang.Exception | ExceptionCommand exception) {
-            exception.printStackTrace();
+        } catch (ServletException | IOException | ExceptionCommand e) {
+            logger.error(e.getMessage());
         }
     }
 }
