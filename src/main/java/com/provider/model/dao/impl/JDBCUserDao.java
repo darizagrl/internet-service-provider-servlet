@@ -109,15 +109,15 @@ public class JDBCUserDao implements UserDao {
     }
 
     @Override
-    public void update(User entity) {
+    public void update(User user) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
-            preparedStatement.setString(1, entity.getFirstname());
-            preparedStatement.setString(2, entity.getLastname());
-            preparedStatement.setString(3, entity.getEmail());
-            preparedStatement.setString(4, entity.getPassword());
-            preparedStatement.setBoolean(5, entity.isBlocked());
-            preparedStatement.setDouble(6, entity.getBalance());
-            preparedStatement.setInt(7, entity.getId());
+            preparedStatement.setString(1, user.getFirstname());
+            preparedStatement.setString(2, user.getLastname());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setBoolean(5, user.isBlocked());
+            preparedStatement.setDouble(6, user.getBalance());
+            preparedStatement.setInt(7, user.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage());

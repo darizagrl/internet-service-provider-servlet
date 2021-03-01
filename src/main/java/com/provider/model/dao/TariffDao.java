@@ -7,11 +7,5 @@ import java.util.List;
 public interface TariffDao extends GenericDao<Tariff> {
     List<Tariff> findAllByServiceId(int serviceId);
 
-    List<Tariff> findByServiceSortedASC(int serviceId);
-
-    List<Tariff> findByServiceSortedDESC(int serviceId);
-
-    List<Tariff> findByServiceSortedByPriceASC(int serviceId);
-
-    List<Tariff> findByServiceSortedByPriceDESC(int serviceId);
+    List<Tariff> findPaginatedAndSorted(int serviceId, String sortField, String sortOrder, Integer currentPageNum, Integer recordsPerPage);
 }

@@ -47,11 +47,14 @@ public class JDBCTariffDao implements TariffDao {
     }
 
     @Override
-    public List<Tariff> findByServiceSortedASC(int serviceId) {
-        List<Tariff> list = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_TARIFFS_BY_SERVICE_SORTED_ASC)) {
-            preparedStatement.setInt(1, serviceId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+    public List<Tariff> findPaginatedAndSorted(int serviceId, String sortField, String sortOrder, Integer currentPageNum, Integer recordsPerPage) {
+        List<Tariff> tariffs = new ArrayList<>();
+        ResultSet resultSet;
+        try (PreparedStatement stmt = connection.prepareStatement(FIND_TARIFFS_BY_SERVICE + ORDER_BY + sortField + " " + sortOrder + LIMIT_OFFSET)) {
+            stmt.setInt(1, serviceId);
+            stmt.setInt(2, recordsPerPage);
+            stmt.setInt(3, (currentPageNum - 1) * recordsPerPage);
+            resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 String name = resultSet.getString(2);
@@ -64,91 +67,14 @@ public class JDBCTariffDao implements TariffDao {
                 Tariff tariff = new Tariff(name, description, price);
                 tariff.setId(id);
                 tariff.setService(service);
-                list.add(tariff);
+                tariffs.add(tariff);
             }
         } catch (SQLException e) {
             logger.error(e.getMessage());
         }
-        return list;
+        return tariffs;
     }
 
-    @Override
-    public List<Tariff> findByServiceSortedDESC(int serviceId) {
-        List<Tariff> list = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_TARIFFS_BY_SERVICE_SORTED_DESC)) {
-            preparedStatement.setInt(1, serviceId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String name = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                double price = resultSet.getDouble(4);
-                int servId = resultSet.getInt(6);
-                String servName = resultSet.getString(7);
-                Service service = new Service(servName);
-                service.setId(servId);
-                Tariff tariff = new Tariff(name, description, price);
-                tariff.setId(id);
-                tariff.setService(service);
-                list.add(tariff);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        return list;
-    }
-
-    @Override
-    public List<Tariff> findByServiceSortedByPriceASC(int serviceId) {
-        List<Tariff> list = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_ASC)) {
-            preparedStatement.setInt(1, serviceId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String name = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                double price = resultSet.getDouble(4);
-                int servId = resultSet.getInt(6);
-                String servName = resultSet.getString(7);
-                Service service = new Service(servName);
-                service.setId(servId);
-                Tariff tariff = new Tariff(name, description, price);
-                tariff.setId(id);
-                tariff.setService(service);
-                list.add(tariff);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        return list;
-    }
-
-    @Override
-    public List<Tariff> findByServiceSortedByPriceDESC(int serviceId) {
-        List<Tariff> list = new ArrayList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_DESC)) {
-            preparedStatement.setInt(1, serviceId);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                String name = resultSet.getString(2);
-                String description = resultSet.getString(3);
-                double price = resultSet.getDouble(4);
-                int servId = resultSet.getInt(6);
-                String servName = resultSet.getString(7);
-                Service service = new Service(servName);
-                service.setId(servId);
-                Tariff tariff = new Tariff(name, description, price);
-                tariff.setId(id);
-                tariff.setService(service);
-                list.add(tariff);
-            }
-        } catch (SQLException e) {
-            logger.error(e.getMessage());
-        }
-        return list;
-    }
 
     @Override
     public void create(Tariff tariff) {
@@ -174,6 +100,7 @@ public class JDBCTariffDao implements TariffDao {
     public Tariff findById(int id) {
         Tariff tariff = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(FIND_TARIFF)) {
+            logger.info("Searching for tariff id={}", id);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -190,7 +117,7 @@ public class JDBCTariffDao implements TariffDao {
                 tariff.setService(service);
             }
         } catch (SQLException e) {
-            logger.error(e.getLocalizedMessage());
+            logger.error(e.getMessage());
         }
         return tariff;
     }
@@ -223,13 +150,14 @@ public class JDBCTariffDao implements TariffDao {
     }
 
     @Override
-    public void update(Tariff entity) {
+    public void update(Tariff tariff) {
+        logger.info("Updating tariff {}", tariff.getName());
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_TARIFF)) {
-            preparedStatement.setString(1, (entity.getName()));
-            preparedStatement.setString(2, (entity.getDescription()));
-            preparedStatement.setDouble(3, (entity.getPrice()));
-            preparedStatement.setInt(4, (entity.getService().getId()));
-            preparedStatement.setInt(5, entity.getId());
+            preparedStatement.setString(1, (tariff.getName()));
+            preparedStatement.setString(2, (tariff.getDescription()));
+            preparedStatement.setDouble(3, (tariff.getPrice()));
+            preparedStatement.setInt(4, (tariff.getService().getId()));
+            preparedStatement.setInt(5, tariff.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getLocalizedMessage());
@@ -238,6 +166,7 @@ public class JDBCTariffDao implements TariffDao {
 
     @Override
     public void delete(int id) {
+        logger.warn("Deleting tariff id={}", id);
         try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_TARIFF)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

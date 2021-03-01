@@ -14,41 +14,15 @@ public class TariffService {
     DaoFactory daoFactory = DaoFactory.getInstance();
     private final Logger logger = LogManager.getLogger(TariffService.class);
 
-    public List<Tariff> findByServiceSortedASC(int serviceId) {
+    public List<Tariff> findPaginatedAndSorted(int serviceId, String sortField, String sortOrder, Integer currentPageNum, Integer recordsPerPage){
         try (TariffDao dao = daoFactory.getTariffDao()) {
-            return dao.findByServiceSortedASC(serviceId);
+            return dao.findPaginatedAndSorted(serviceId, sortField, sortOrder, currentPageNum, recordsPerPage);
         } catch (SQLException | ClassNotFoundException e) {
             logger.error(e.getMessage());
             throw new DAOException(e);
         }
     }
 
-    public List<Tariff> findByServiceSortedDESC(int serviceId) {
-        try (TariffDao dao = daoFactory.getTariffDao()) {
-            return dao.findByServiceSortedDESC(serviceId);
-        } catch (SQLException | ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new DAOException(e);
-        }
-    }
-
-    public List<Tariff> findByServiceSortedByPriceASC(int serviceId) {
-        try (TariffDao dao = daoFactory.getTariffDao()) {
-            return dao.findByServiceSortedByPriceASC(serviceId);
-        } catch (SQLException | ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new DAOException(e);
-        }
-    }
-
-    public List<Tariff> findByServiceSortedByPriceDESC(int serviceId) {
-        try (TariffDao dao = daoFactory.getTariffDao()) {
-            return dao.findByServiceSortedByPriceDESC(serviceId);
-        } catch (SQLException | ClassNotFoundException e) {
-            logger.error(e.getMessage());
-            throw new DAOException(e);
-        }
-    }
 
     public List<Tariff> findAllByServiceId(int serviceId) {
         try (TariffDao dao = daoFactory.getTariffDao()) {
@@ -108,4 +82,5 @@ public class TariffService {
             throw new DAOException(e);
         }
     }
+
 }

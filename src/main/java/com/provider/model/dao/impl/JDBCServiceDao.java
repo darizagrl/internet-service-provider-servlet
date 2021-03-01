@@ -77,10 +77,10 @@ public class JDBCServiceDao implements ServiceDao {
     }
 
     @Override
-    public void update(Service entity) {
+    public void update(Service service) {
         try (PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SERV_NAME)) {
-            preparedStatement.setString(1, (entity.getName()));
-            preparedStatement.setInt(2, entity.getId());
+            preparedStatement.setString(1, (service.getName()));
+            preparedStatement.setInt(2, service.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             logger.error(e.getMessage());

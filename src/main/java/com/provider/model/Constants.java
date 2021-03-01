@@ -10,11 +10,9 @@ public class Constants {
     public static final String DELETE_SERVICE = "DELETE FROM service WHERE id = ?";
 
     //Tariff
-    public static final String FIND_TARIFFS_BY_SERVICE = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=?;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_ASC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_DESC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.name DESC;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_ASC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.price ASC;";
-    public static final String FIND_TARIFFS_BY_SERVICE_SORTED_BY_PRICE_DESC = "Select * from tariff inner join service on tariff.service_id = service.id where tariff.service_id=? order by tariff.price DESC";
+    public static final String FIND_TARIFFS_BY_SERVICE = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.service_id=? ";
+    public static final String ORDER_BY = "ORDER BY ";
+    public static final String LIMIT_OFFSET = " LIMIT ? OFFSET ?";
     public static final String CREATE_TARIFF = "INSERT INTO tariff (name, description, price, service_id) VALUES (?,?,?,?)";
     public static final String FIND_TARIFF = "SELECT * FROM tariff INNER JOIN service ON tariff.service_id = service.id WHERE tariff.id=?;";
     public static final String FIND_ALL_TARIFFS = "Select * from tariff inner join service on tariff.service_id = service.id;";
