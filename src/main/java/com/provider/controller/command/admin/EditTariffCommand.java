@@ -5,12 +5,15 @@ import com.provider.model.entity.Service;
 import com.provider.model.entity.Tariff;
 import com.provider.model.service.ServiceService;
 import com.provider.model.service.TariffService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 public class EditTariffCommand implements Command {
+    private final Logger logger = LogManager.getLogger(EditTariffCommand.class);
     TariffService tariffService;
     ServiceService serviceService;
 
@@ -24,6 +27,7 @@ public class EditTariffCommand implements Command {
         int tariffId = Integer.parseInt(request.getParameter("tariffId"));
         List<Service> serviceList = serviceService.findAll();
         Tariff currentTariff = tariffService.findById(tariffId);
+        logger.info("Updating the tariff with id={}", currentTariff.getId());
         String newName = request.getParameter("newName");
         String newDescription = request.getParameter("newDescription");
         int serviceId;
@@ -41,6 +45,7 @@ public class EditTariffCommand implements Command {
             }
 
         } catch (NumberFormatException e) {
+            logger.error(e.getMessage());
             request.setAttribute("message", "Wrong number format");
             request.setAttribute("tariff", currentTariff);
             request.setAttribute("currentService", currentTariff.getService());
@@ -52,23 +57,25 @@ public class EditTariffCommand implements Command {
         request.setAttribute("serviceList", serviceList);
 
         if (newName == null || newName.equals("") || newDescription == null || newDescription.equals("")) {
-            request.setAttribute("message", "You have empty fields.");
+            request.setAttribute("message", "You have empty fields");
             return "/admin/tariff_edit.jsp";
         }
-        if (newPrice < 0 || newPrice > 1000) {
-            request.setAttribute("message", "Max price = 1000, min = 0");
+        if (newPrice < 0 || newPrice > 10000) {
+            logger.warn("The price is out of range [0, 10 000], price= {}", newPrice);
+            request.setAttribute("message", "The price has to be between 0 and 10 000");
             return "/admin/tariff_edit.jsp";
         }
-        if (newName.length() < 4 || newName.length() > 255) {
-            request.setAttribute("message", "Minimum length = 4.\n"
-                    + "Maximum length = 255");
+        if (newName.length() < 2 || newName.length() > 255) {
+            logger.warn("The name length is out of range [2, 255] symbols, name= {}", newName);
+            request.setAttribute("message", "The name has to be between 2 and 255 symbols");
             return "/admin/tariff_edit.jsp";
         }
         List<Tariff> list = tariffService.findAll();
         if (!(newName.equals(currentTariff.getName()))) {
             for (Tariff tariff : list) {
                 if (newName.equals(tariff.getName())) {
-                    request.setAttribute("message", "This tariff name already exist.");
+                    logger.warn("The tariff with this name {} already exist ", newName);
+                    request.setAttribute("message", "The tariff with this name already exist.");
                     return "/admin/tariff_edit.jsp";
                 }
             }
@@ -79,6 +86,7 @@ public class EditTariffCommand implements Command {
         currentTariff.setPrice(newPrice);
         currentTariff.setService(newService);
         tariffService.update(currentTariff);
+        logger.info("The tariff with id={} was updated", currentTariff.getId());
         return "/admin/admin_index";
     }
 }

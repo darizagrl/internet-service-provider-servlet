@@ -49,7 +49,7 @@
     </form>
     <hr>
     <c:if test="${not empty message}">
-        <div class="alert alert-success">
+        <div class="alert alert-info">
             <c:out value="${message}"/>
         </div>
     </c:if>

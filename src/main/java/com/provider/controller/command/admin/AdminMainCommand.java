@@ -62,5 +62,4 @@ public class AdminMainCommand implements Command {
         request.setAttribute("currentPage", currentPage);
         return "/admin/admin_index.jsp";
     }
-    //TODO pagination
 }
