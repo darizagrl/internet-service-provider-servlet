@@ -25,32 +25,37 @@ public class JDBCUserDao implements UserDao {
     @Override
     public void create(User user) {
         try {
+            connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getFirstname());
             preparedStatement.setString(2, user.getLastname());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
             preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                user.setId(generatedKeys.getInt(1));
-            } else {
-                throw new SQLException("User creation has failed, no ID obtained.");
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    user.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("User creation has failed, no ID obtained.");
+                }
             }
-            PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_USER_ROLE);
+        } catch (SQLException e) {
+            logger.error(e.getMessage());
+        }
+        try (PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_USER_ROLE)) {
             preparedStatement2.setInt(1, user.getId());
             preparedStatement2.setInt(2, 2);
             Role role = new Role(2, "user");
             user.setRole(role);
-            preparedStatement.executeUpdate();
+            preparedStatement2.executeUpdate();
             connection.commit();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             logger.error(e.getMessage());
-            try {
-                connection.rollback();
-            } catch (SQLException throwables) {
-                logger.error(e.getMessage());
-            }
+        }
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            logger.error(e);
         }
     }
 
