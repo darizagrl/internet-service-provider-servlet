@@ -1,45 +1,40 @@
 package com.provider.model.dao.impl;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
-    private final DataSource dataSource;
-    private static ConnectionPool instance = null;
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
     private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("db");
 
+    static {
+        logger.info("Creating connection pool...");
+        config.setJdbcUrl(resourceBundle.getString("db.url"));
+        config.setUsername(resourceBundle.getString("db.user"));
+        config.setPassword(resourceBundle.getString("db.password"));
+        config.setDriverClassName(resourceBundle.getString("db.driver"));
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds = new HikariDataSource(config);
+    }
 
     private ConnectionPool() {
-        logger.info("Creating connection pool...");
-        BasicDataSource basicDataSource = new BasicDataSource();
-        basicDataSource.setUrl(resourceBundle.getString("db.url"));
-        basicDataSource.setUsername(resourceBundle.getString("db.user"));
-        basicDataSource.setPassword(resourceBundle.getString("db.password"));
-        basicDataSource.setDriverClassName(resourceBundle.getString("db.driver"));
-
-        dataSource = basicDataSource;
     }
 
-    public static ConnectionPool getInstance() {
-        if (instance == null) {
-            instance = new ConnectionPool();
-            logger.info("Connection pool has been created.");
-        }
-        return instance;
-    }
-
-    public Connection getConnection() {
+    public static Connection getConnection() {
         try {
-            return dataSource.getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return ds.getConnection();
+        } catch (SQLException throwables) {
+            logger.error(throwables.getMessage());
         }
         return null;
     }
