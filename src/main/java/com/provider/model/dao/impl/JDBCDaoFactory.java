@@ -1,5 +1,6 @@
 package com.provider.model.dao.impl;
 
+import com.provider.model.connection.ConnectionPool;
 import com.provider.model.dao.DaoFactory;
 import com.provider.model.dao.ServiceDao;
 import com.provider.model.dao.TariffDao;

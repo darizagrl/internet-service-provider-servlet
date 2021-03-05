@@ -23,13 +23,6 @@ public class CommandUtility {
         session.setAttribute("user", user);
     }
 
-    public static void deleteUserFromContext(ServletContext context) {
-        String email = (String) context.getAttribute("email");
-        HashSet<String> loggedUsers = (HashSet<String>) context.getAttribute("loggedUsers");
-        loggedUsers.remove(email);
-        context.setAttribute("loggedUsers", loggedUsers);
-    }
-
     public static boolean checkUserLogged(HttpServletRequest request, String email) {
         ServletContext context = request.getSession().getServletContext();
         HashSet<String> loggedUsers = (HashSet<String>) context.getAttribute("loggedUsers");

@@ -68,7 +68,7 @@ public class Servlet extends HttpServlet {
             path = path.replaceAll(".*/internet_provider/", "");
             Command command = commands.getOrDefault(path,
                     (req, res) -> "/WEB-INF/error.jsp");
-//            Command command = commands.get(path);
+
             String page = command.execute(request, response);
 
             if (page.contains("redirect:")) {

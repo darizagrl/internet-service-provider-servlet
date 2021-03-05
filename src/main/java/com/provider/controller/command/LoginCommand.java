@@ -26,7 +26,7 @@ public class LoginCommand implements Command {
         if (email == null || email.equals("") || password == null || password.equals("")) {
             return "/login.jsp";
         }
-        if(CommandUtility.checkUserLogged(request, email)){
+        if (CommandUtility.checkUserLogged(request, email)) {
             return "/WEB-INF/error.jsp";
         }
         List<User> userList = userService.findAll();

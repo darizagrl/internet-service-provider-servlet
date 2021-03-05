@@ -1,48 +1,41 @@
 package com.provider.model.connection;
 
-import com.provider.model.dao.exception.DAOConfigurationException;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 public class ConnectionPool {
     private static final Logger logger = LogManager.getLogger(ConnectionPool.class);
-    private static ConnectionPool instance;
+    private static final HikariConfig config = new HikariConfig();
+    private static final HikariDataSource ds;
+    private static final ResourceBundle resourceBundle = ResourceBundle.getBundle("db");
 
-    public static synchronized ConnectionPool getInstance() throws DAOConfigurationException {
-        if (instance == null) {
-            instance = new ConnectionPool();
-        }
-        return instance;
+    static {
+        logger.info("Creating connection pool...");
+        config.setJdbcUrl(resourceBundle.getString("db.url"));
+        config.setUsername(resourceBundle.getString("db.user"));
+        config.setPassword(resourceBundle.getString("db.password"));
+        config.setDriverClassName(resourceBundle.getString("db.driver"));
+        config.addDataSourceProperty("cachePrepStmts", "true");
+        config.addDataSourceProperty("prepStmtCacheSize", "250");
+        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds = new HikariDataSource(config);
     }
 
-    private ConnectionPool() throws DAOConfigurationException {
-        try {
-            Context ctx = new InitialContext();
-            ds = (DataSource) ctx.lookup("java:comp/env/jdbc/postgres");
-            logger.trace("Data source ==> " + ds);
-        } catch (NamingException ex) {
-            logger.error("Cannot obtain the data source", ex);
-            throw new DAOConfigurationException("Cannot obtain the data source", ex);
-        }
+    private ConnectionPool() {
     }
 
-    private DataSource ds;
-
-    public Connection getConnection() throws DAOConfigurationException {
-        Connection con = null;
+    public static Connection getConnection() {
         try {
-            con = ds.getConnection();
-        } catch (SQLException ex) {
-            logger.error("Cannot obtain connection", ex);
-            throw new DAOConfigurationException("Cannot obtain connection", ex);
+            return ds.getConnection();
+        } catch (SQLException throwables) {
+            logger.error(throwables.getMessage());
         }
-        return con;
+        return null;
     }
 }
