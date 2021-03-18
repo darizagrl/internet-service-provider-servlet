@@ -63,7 +63,7 @@ public class RegistrationCommand implements Command {
                 return "/admin/registration.jsp";
             }
         }
-        User user = new User(firstname, lastname, email, password);
+        User user = new User.Builder().setFirstname(firstname).setLastname(lastname).setEmail(email).setPassword(password).build();
         userService.create(user);
         logger.info("The user with email {} was created", user.getEmail());
         return "redirect:/admin/user_management";

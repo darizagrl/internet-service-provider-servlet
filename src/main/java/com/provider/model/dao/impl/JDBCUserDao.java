@@ -45,7 +45,7 @@ public class JDBCUserDao implements UserDao {
         try (PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_USER_ROLE)) {
             preparedStatement2.setInt(1, user.getId());
             preparedStatement2.setInt(2, 2);
-            Role role = new Role(2, "user");
+            Role role = new Role.Builder().setId(2).setName("user").build();
             user.setRole(role);
             preparedStatement2.executeUpdate();
             connection.commit();
@@ -73,7 +73,12 @@ public class JDBCUserDao implements UserDao {
                 String password = resultSet.getString(5);
                 boolean isBlocked = resultSet.getBoolean(6);
                 double balance = resultSet.getDouble(7);
-                user = new User(firstname, lastname, email, password);
+                user = new User.Builder()
+                        .setFirstname(firstname)
+                        .setLastname(lastname)
+                        .setEmail(email)
+                        .setPassword(password)
+                        .build();
                 user.setId(userId);
                 user.setBalance(balance);
                 user.setBlocked(isBlocked);
@@ -99,11 +104,16 @@ public class JDBCUserDao implements UserDao {
                 double balance = resultSet.getDouble(7);
                 Integer roleId = resultSet.getInt(8);
                 String roleName = resultSet.getString(9);
-                User user = new User(firstname, lastname, email, password);
+                User user = new User.Builder()
+                        .setFirstname(firstname)
+                        .setLastname(lastname)
+                        .setEmail(email)
+                        .setPassword(password)
+                        .build();
                 user.setId(id);
                 user.setBalance(balance);
                 user.setBlocked(isBlocked);
-                Role role = new Role(roleId, roleName);
+                Role role = new Role.Builder().setId(roleId).setName(roleName).build();
                 user.setRole(role);
                 list.add(user);
             }

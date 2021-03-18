@@ -1,24 +1,23 @@
 package com.provider.model.entity;
 
-import java.util.Objects;
-
 public class Role {
     private Integer id;
     private String name;
 
-    public Role() {
+    private Role(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
     }
 
-    public Role(Integer id, String name) {
-        this.id = id;
-        this.name = name;
+    public static Builder builder() {
+        return new Builder();
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -28,6 +27,25 @@ public class Role {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static class Builder {
+        private Integer id;
+        private String name;
+
+        public Builder setId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Role build() {
+            return new Role(this);
+        }
     }
 
     @Override

@@ -34,12 +34,12 @@ public class LoginCommand implements Command {
         logger.info("User password:" + password);
         for (User user : userList) {
             if (email.equals(user.getEmail()) && password.equals(user.getPassword())) {
-                if (user.getRole().getId().equals(1)) {
+                if (user.getRole().getId() == 1) {
                     CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
                     logger.info("User role:" + user.getRole());
                     return "redirect:/admin/admin_index";
-                } else if (user.getRole().getId().equals(2)) {
+                } else if (user.getRole().getId() == 2) {
                     CommandUtility.setUserRole(request, user.getRole(), email);
                     CommandUtility.setUserAsAttribute(request, user);
                     logger.info("User role:" + user.getRole());
